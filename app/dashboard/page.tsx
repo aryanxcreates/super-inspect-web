@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { PLAN_INFO } from "@/lib/plans";
 import type { Plan } from "@/lib/plans";
+import { prisma } from "@/lib/prisma";
 
 export const metadata = { title: "Dashboard — Super Inspect" };
 
@@ -8,28 +9,25 @@ export default async function DashboardPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("plan, license_key, created_at")
-    .eq("id", user!.id)
-    .single();
+  const profile = await prisma.profile.findUnique({
+    where: { id: user!.id },
+    select: { plan: true, licenseKey: true, createdAt: true },
+  });
 
   const plan = (profile?.plan ?? "free") as Plan;
   const planInfo = PLAN_INFO[plan];
 
-  // Get usage stats
-  const { count: totalUsage } = await supabase
-    .from("usage_logs")
-    .select("*", { count: "exact", head: true })
-    .eq("user_id", user!.id);
+  const totalUsage = await prisma.usageLog.count({
+    where: { userId: user!.id },
+  });
 
-  const { data: featureBreakdown } = await supabase
-    .from("usage_logs")
-    .select("feature")
-    .eq("user_id", user!.id);
+  const featureRows = await prisma.usageLog.findMany({
+    where: { userId: user!.id },
+    select: { feature: true },
+  });
 
   const featureCounts: Record<string, number> = {};
-  for (const row of featureBreakdown ?? []) {
+  for (const row of featureRows) {
     featureCounts[row.feature] = (featureCounts[row.feature] ?? 0) + 1;
   }
 
@@ -40,11 +38,11 @@ export default async function DashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <StatCard label="Current Plan" value={planInfo.name} detail={`${planInfo.price} ${planInfo.priceDetail}`} />
-        <StatCard label="Total Actions" value={String(totalUsage ?? 0)} detail="all time" />
+        <StatCard label="Total Actions" value={String(totalUsage)} detail="all time" />
         <StatCard
           label="License Key"
-          value={profile?.license_key ? "Active" : "None"}
-          detail={profile?.license_key ?? "Upgrade to get a key"}
+          value={profile?.licenseKey ? "Active" : "None"}
+          detail={profile?.licenseKey ?? "Upgrade to get a key"}
           mono
         />
       </div>

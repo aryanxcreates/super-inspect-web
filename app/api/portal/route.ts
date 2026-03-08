@@ -1,21 +1,23 @@
 import { CustomerPortal } from "@polar-sh/nextjs";
 import { type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
 
 export const GET = CustomerPortal({
   accessToken: process.env.POLAR_ACCESS_TOKEN!,
   getCustomerId: async (req: NextRequest) => {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return "";
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("polar_customer_id")
-      .eq("id", user.id)
-      .single();
+    const profile = await prisma.profile.findUnique({
+      where: { id: user.id },
+      select: { polarCustomerId: true },
+    });
 
-    return profile?.polar_customer_id ?? "";
+    return profile?.polarCustomerId ?? "";
   },
-  server: "sandbox", // Change to "production" when going live
+  server: "sandbox",
 });

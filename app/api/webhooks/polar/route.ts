@@ -1,10 +1,5 @@
 import { Webhooks } from "@polar-sh/nextjs";
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { prisma } from "@/lib/prisma";
 
 export const POST = Webhooks({
   webhookSecret: process.env.POLAR_WEBHOOK_SECRET!,
@@ -14,62 +9,57 @@ export const POST = Webhooks({
     const customerId = sub.customerId;
     const email = sub.customer.email;
 
-    const { data: profile } = await supabaseAdmin
-      .from("profiles")
-      .select("id")
-      .eq("email", email)
-      .single();
+    const profile = await prisma.profile.findFirst({
+      where: { email },
+      select: { id: true },
+    });
 
     if (!profile) return;
 
-    await supabaseAdmin
-      .from("profiles")
-      .update({
+    await prisma.profile.update({
+      where: { id: profile.id },
+      data: {
         plan: "pro",
-        polar_customer_id: customerId,
-        polar_subscription_id: sub.id,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", profile.id);
+        polarCustomerId: customerId,
+        polarSubscriptionId: sub.id,
+      },
+    });
   },
 
   onSubscriptionCanceled: async (payload) => {
     const sub = payload.data;
     const customerId = sub.customerId;
 
-    await supabaseAdmin
-      .from("profiles")
-      .update({
+    await prisma.profile.updateMany({
+      where: { polarCustomerId: customerId },
+      data: {
         plan: "free",
-        polar_subscription_id: null,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("polar_customer_id", customerId);
+        polarSubscriptionId: null,
+      },
+    });
   },
 
   onOrderPaid: async (payload) => {
     const order = payload.data;
     const email = order.customer.email;
 
-    // Check if this is the lifetime product
-    const isLifetime = order.productId === process.env.NEXT_PUBLIC_POLAR_LIFETIME_PRODUCT_ID;
+    const isLifetime =
+      order.productId === process.env.NEXT_PUBLIC_POLAR_LIFETIME_PRODUCT_ID;
     if (!isLifetime) return;
 
-    const { data: profile } = await supabaseAdmin
-      .from("profiles")
-      .select("id")
-      .eq("email", email)
-      .single();
+    const profile = await prisma.profile.findFirst({
+      where: { email },
+      select: { id: true },
+    });
 
     if (!profile) return;
 
-    await supabaseAdmin
-      .from("profiles")
-      .update({
+    await prisma.profile.update({
+      where: { id: profile.id },
+      data: {
         plan: "lifetime",
-        polar_customer_id: order.customerId,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", profile.id);
+        polarCustomerId: order.customerId,
+      },
+    });
   },
 });

@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { PLAN_INFO, type Plan } from "@/lib/plans";
 import Link from "next/link";
 import { Check } from "lucide-react";
+import { prisma } from "@/lib/prisma";
 
 export const metadata = { title: "Billing — Super Inspect" };
 
@@ -9,14 +10,13 @@ export default async function BillingPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("plan, polar_customer_id")
-    .eq("id", user!.id)
-    .single();
+  const profile = await prisma.profile.findUnique({
+    where: { id: user!.id },
+    select: { plan: true, polarCustomerId: true },
+  });
 
   const currentPlan = (profile?.plan ?? "free") as Plan;
-  const hasCustomerId = !!profile?.polar_customer_id;
+  const hasCustomerId = !!profile?.polarCustomerId;
 
   return (
     <div>

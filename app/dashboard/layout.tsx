@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/shell";
+import { prisma } from "@/lib/prisma";
+import type { Plan } from "@/lib/plans";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -8,14 +10,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
+  const profile = await prisma.profile.findUnique({
+    where: { id: user.id },
+    select: { plan: true },
+  });
 
   return (
-    <DashboardShell user={user} plan={profile?.plan ?? "free"}>
+    <DashboardShell user={user} plan={(profile?.plan ?? "free") as Plan}>
       {children}
     </DashboardShell>
   );
