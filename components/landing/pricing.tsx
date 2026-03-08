@@ -13,7 +13,8 @@ export function Pricing() {
             Simple, transparent pricing
           </h2>
           <p className="mt-4 text-gray-500 max-w-lg mx-auto">
-            Start free. Upgrade when you need the full power. Pay once for lifetime access.
+            Start free. Upgrade when you need the full power. Pay once for
+            lifetime access.
           </p>
         </div>
 
@@ -37,27 +38,40 @@ export function Pricing() {
                   </div>
                 )}
 
-                <h3 className={`text-sm font-semibold ${isHighlighted ? "text-blue-100" : "text-gray-500"}`}>
+                <h3
+                  className={`text-sm font-semibold ${isHighlighted ? "text-blue-100" : "text-gray-500"}`}
+                >
                   {plan.name}
                 </h3>
 
                 <div className="mt-4 flex items-baseline gap-1">
-                  <span className={`text-4xl font-bold ${isHighlighted ? "text-white" : "text-gray-900"}`}>
+                  <span
+                    className={`text-4xl font-bold ${isHighlighted ? "text-white" : "text-gray-900"}`}
+                  >
                     {plan.price}
                   </span>
-                  <span className={`text-sm ${isHighlighted ? "text-blue-200" : "text-gray-400"}`}>
+                  <span
+                    className={`text-sm ${isHighlighted ? "text-blue-200" : "text-zinc-500"}`}
+                  >
                     {plan.priceDetail}
                   </span>
                 </div>
 
                 <ul className="mt-6 flex-1 flex flex-col gap-3">
                   {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2 text-sm">
+                    <li
+                      key={feature}
+                      className="flex items-start gap-2 text-sm"
+                    >
                       <Check
                         size={16}
                         className={`mt-0.5 shrink-0 ${isHighlighted ? "text-blue-200" : "text-blue-500"}`}
                       />
-                      <span className={isHighlighted ? "text-blue-50" : "text-gray-600"}>
+                      <span
+                        className={
+                          isHighlighted ? "text-blue-50" : "text-gray-600"
+                        }
+                      >
                         {feature}
                       </span>
                     </li>
@@ -65,14 +79,20 @@ export function Pricing() {
                 </ul>
 
                 <Link
-                  href={planKey === "free" ? "/signup" : "/signup?plan=" + planKey}
+                  href={
+                    planKey === "free" ? "/signup" : "/signup?plan=" + planKey
+                  }
                   className={`mt-8 block text-center px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
                     isHighlighted
                       ? "bg-white text-blue-600 hover:bg-blue-50"
                       : "bg-gray-900 text-white hover:bg-gray-800"
                   }`}
                 >
-                  {planKey === "free" ? "Get started" : planKey === "pro" ? "Subscribe" : "Buy lifetime"}
+                  {planKey === "free"
+                    ? "Get started"
+                    : planKey === "pro"
+                      ? "Subscribe"
+                      : "Buy lifetime"}
                 </Link>
               </div>
             );

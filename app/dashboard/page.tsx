@@ -1,24 +1,26 @@
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import type { Plan } from "@/lib/plans";
-import { 
-  ShieldCheck, 
-  Monitor, 
-  Zap, 
-  Download, 
-  BookOpen, 
-  HelpCircle, 
-  Copy, 
-  Check,
-  Laptop
+import {
+  ShieldCheck,
+  Monitor,
+  Zap,
+  Download,
+  BookOpen,
+  HelpCircle,
+  Laptop,
+  ArrowUpRight,
 } from "lucide-react";
 import { CopyButton } from "@/components/dashboard/copy-button";
+import Link from "next/link";
 
 export const metadata = { title: "Dashboard — Snap Inspect" };
 
 export default async function DashboardPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const profile = await prisma.profile.findUnique({
     where: { id: user!.id },
@@ -27,13 +29,25 @@ export default async function DashboardPage() {
 
   const plan = (profile?.plan ?? "free") as Plan;
   const licenseKey = profile?.licenseKey ?? "No active license";
-  const memberSince = profile?.createdAt 
-    ? new Date(profile.createdAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
+  const memberSince = profile?.createdAt
+    ? new Date(profile.createdAt).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
     : "Unknown";
 
   // Mock data for devices since we don't have a table yet
   const devices = [
-    { id: 1, name: "Chrome 145", type: "browser", os: "Windows 10/11", active: true, current: true, activatedAt: "Mar 3, 2026" },
+    {
+      id: 1,
+      name: "Chrome 145",
+      type: "browser",
+      os: "Windows 10/11",
+      active: true,
+      current: true,
+      activatedAt: "Mar 3, 2026",
+    },
   ];
   const maxDevices = 3;
   const activeDevicesCount = devices.length;
@@ -44,12 +58,30 @@ export default async function DashboardPage() {
       {/* Welcome Section */}
       <div className="space-y-2">
         <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
-          Welcome, {user?.email?.split('@')[0]}!
+          Welcome, {user?.email?.split("@")[0]}!
         </h1>
         <p className="text-gray-500 text-lg">
           Manage your Snap Inspect license and devices
         </p>
       </div>
+
+      {plan === "free" && (
+        <div className="rounded-2xl bg-blue-50 border border-blue-100 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h3 className="text-lg font-bold text-gray-900">Upgrade your plan</h3>
+            <p className="text-sm text-gray-600 mt-1">
+              Get Pro or Lifetime access for more features and a license key.
+            </p>
+          </div>
+          <Link
+            href="/dashboard/billing"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shrink-0"
+          >
+            View plans & checkout
+            <ArrowUpRight size={16} />
+          </Link>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* License Details Card */}
@@ -59,14 +91,20 @@ export default async function DashboardPage() {
               <ShieldCheck size={24} />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">License Details</h2>
-              <p className="text-gray-500 text-sm">Your Snap Inspect license information</p>
+              <h2 className="text-lg font-bold text-gray-900">
+                License Details
+              </h2>
+              <p className="text-gray-500 text-sm">
+                Your Snap Inspect license information
+              </p>
             </div>
           </div>
 
           <div className="space-y-6 flex-1">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-gray-500">License Key</label>
+              <label className="text-sm font-medium text-gray-500">
+                License Key
+              </label>
               <div className="flex items-center gap-2">
                 <code className="flex-1 bg-gray-50 px-4 py-3 rounded-lg text-sm font-mono text-gray-900 border border-gray-200">
                   {licenseKey}
@@ -77,14 +115,27 @@ export default async function DashboardPage() {
 
             <div className="flex items-center justify-between py-2 border-b border-gray-50">
               <span className="text-sm font-medium text-gray-500">Plan</span>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gray-100 text-gray-800 uppercase tracking-wide">
-                {plan}
-              </span>
+              <div className="flex items-center gap-3">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gray-100 text-gray-800 uppercase tracking-wide">
+                  {plan}
+                </span>
+                {plan === "free" && (
+                  <Link
+                    href="/dashboard/billing"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                  >
+                    Upgrade
+                    <ArrowUpRight size={14} />
+                  </Link>
+                )}
+              </div>
             </div>
 
             <div className="flex items-center justify-between py-2 border-b border-gray-50">
               <span className="text-sm font-medium text-gray-500">Email</span>
-              <span className="text-sm font-medium text-gray-900">{user?.email}</span>
+              <span className="text-sm font-medium text-gray-900">
+                {user?.email}
+              </span>
             </div>
 
             <div className="flex items-center justify-between py-2 border-b border-gray-50">
@@ -93,15 +144,18 @@ export default async function DashboardPage() {
             </div>
 
             <div className="flex items-center justify-between py-2">
-              <span className="text-sm font-medium text-gray-500">Member Since</span>
-              <span className="text-sm font-medium text-gray-900">{memberSince}</span>
+              <span className="text-sm font-medium text-gray-500">
+                Member Since
+              </span>
+              <span className="text-sm font-medium text-gray-900">
+                {memberSince}
+              </span>
             </div>
           </div>
         </div>
 
         {/* Active Devices & Quick Actions Column */}
         <div className="flex flex-col gap-8">
-          
           {/* Active Devices Card */}
           <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
             <div className="flex items-start gap-4 mb-6">
@@ -109,8 +163,12 @@ export default async function DashboardPage() {
                 <Monitor size={24} />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-gray-900">Active Devices</h2>
-                <p className="text-gray-500 text-sm">Manage your activated devices</p>
+                <h2 className="text-lg font-bold text-gray-900">
+                  Active Devices
+                </h2>
+                <p className="text-gray-500 text-sm">
+                  Manage your activated devices
+                </p>
               </div>
             </div>
 
@@ -120,10 +178,12 @@ export default async function DashboardPage() {
 
             <div className="mb-6">
               <div className="flex justify-between text-sm font-medium mb-2">
-                <span className="text-gray-900">{activeDevicesCount} / {maxDevices} devices activated</span>
+                <span className="text-gray-900">
+                  {activeDevicesCount} / {maxDevices} devices activated
+                </span>
               </div>
               <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div 
+                <div
                   className="h-full bg-green-500 rounded-full transition-all duration-500 ease-out"
                   style={{ width: `${progressPercentage}%` }}
                 />
@@ -131,22 +191,31 @@ export default async function DashboardPage() {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-gray-900">Activated Devices</h3>
+              <h3 className="text-sm font-semibold text-gray-900">
+                Activated Devices
+              </h3>
               {devices.map((device) => (
-                <div key={device.id} className="flex items-center gap-4 p-3 bg-green-50/50 border border-green-100 rounded-xl">
+                <div
+                  key={device.id}
+                  className="flex items-center gap-4 p-3 bg-green-50/50 border border-green-100 rounded-xl"
+                >
                   <div className="p-2 bg-white rounded-lg border border-green-100 text-gray-600">
                     <Laptop size={18} />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <p className="text-sm font-bold text-gray-900">{device.name}</p>
+                      <p className="text-sm font-bold text-gray-900">
+                        {device.name}
+                      </p>
                       {device.current && (
                         <span className="px-1.5 py-0.5 bg-green-200 text-green-800 text-[10px] font-bold rounded uppercase tracking-wider">
                           This Browser
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-gray-500">{device.os} • Activated {device.activatedAt}</p>
+                    <p className="text-xs text-gray-500">
+                      {device.os} • Activated {device.activatedAt}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -160,53 +229,81 @@ export default async function DashboardPage() {
                 <Zap size={24} />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-gray-900">Quick Actions</h2>
-                <p className="text-gray-500 text-sm">Get started with Snap Inspect</p>
+                <h2 className="text-lg font-bold text-gray-900">
+                  Quick Actions
+                </h2>
+                <p className="text-gray-500 text-sm">
+                  Get started with Snap Inspect
+                </p>
               </div>
             </div>
 
             <div className="space-y-3">
-              <a href="#" className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group">
+              <a
+                href="#"
+                className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group"
+              >
                 <div className="flex items-center gap-4">
                   <div className="p-2 bg-amber-100 text-amber-600 rounded-lg group-hover:bg-amber-200 transition-colors">
                     <Download size={18} />
                   </div>
                   <div className="text-left">
-                    <p className="text-sm font-bold text-gray-900">Install Extension</p>
-                    <p className="text-xs text-gray-500">Add to Chrome browser</p>
+                    <p className="text-sm font-bold text-gray-900">
+                      Install Extension
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Add to Chrome browser
+                    </p>
                   </div>
                 </div>
-                <div className="text-gray-400 group-hover:translate-x-1 transition-transform">→</div>
+                <div className="text-zinc-500 group-hover:translate-x-1 transition-transform">
+                  →
+                </div>
               </a>
 
-              <a href="#" className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group">
+              <a
+                href="#"
+                className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group"
+              >
                 <div className="flex items-center gap-4">
                   <div className="p-2 bg-blue-100 text-blue-600 rounded-lg group-hover:bg-blue-200 transition-colors">
                     <BookOpen size={18} />
                   </div>
                   <div className="text-left">
-                    <p className="text-sm font-bold text-gray-900">Documentation</p>
-                    <p className="text-xs text-gray-500">Learn how to use all tools</p>
+                    <p className="text-sm font-bold text-gray-900">
+                      Documentation
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Learn how to use all tools
+                    </p>
                   </div>
                 </div>
-                <div className="text-gray-400 group-hover:translate-x-1 transition-transform">→</div>
+                <div className="text-zinc-500 group-hover:translate-x-1 transition-transform">
+                  →
+                </div>
               </a>
 
-              <a href="#" className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group">
+              <a
+                href="#"
+                className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group"
+              >
                 <div className="flex items-center gap-4">
                   <div className="p-2 bg-green-100 text-green-600 rounded-lg group-hover:bg-green-200 transition-colors">
                     <HelpCircle size={18} />
                   </div>
                   <div className="text-left">
-                    <p className="text-sm font-bold text-gray-900">Get Support</p>
+                    <p className="text-sm font-bold text-gray-900">
+                      Get Support
+                    </p>
                     <p className="text-xs text-gray-500">Contact our team</p>
                   </div>
                 </div>
-                <div className="text-gray-400 group-hover:translate-x-1 transition-transform">→</div>
+                <div className="text-zinc-500 group-hover:translate-x-1 transition-transform">
+                  →
+                </div>
               </a>
             </div>
           </div>
-
         </div>
       </div>
     </div>

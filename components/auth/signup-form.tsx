@@ -48,9 +48,12 @@ export function SignupForm() {
   if (success) {
     return (
       <div className="w-full max-w-sm text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Check your email</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          Check your email
+        </h1>
         <p className="text-sm text-gray-500">
-          We sent a confirmation link to <strong>{email}</strong>. Click it to activate your account.
+          We sent a confirmation link to <strong>{email}</strong>. Click it to
+          activate your account.
         </p>
       </div>
     );
@@ -59,8 +62,12 @@ export function SignupForm() {
   return (
     <div className="w-full max-w-sm">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Create your account</h1>
-        <p className="text-sm text-gray-500 mt-1">Start using Snap Inspect for free</p>
+        <h1 className="text-2xl font-bold text-gray-900">
+          Create your account
+        </h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Start using Snap Inspect for free
+        </p>
       </div>
 
       <div className="flex flex-col gap-3 mb-6">
@@ -75,7 +82,7 @@ export function SignupForm() {
 
       <div className="flex items-center gap-3 mb-6">
         <div className="flex-1 h-px bg-gray-200" />
-        <span className="text-xs text-gray-400">or</span>
+        <span className="text-xs text-zinc-500">or</span>
         <div className="flex-1 h-px bg-gray-200" />
       </div>
 
@@ -86,7 +93,7 @@ export function SignupForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+          className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-900 placeholder:text-zinc-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
         />
         <input
           type="password"
@@ -95,7 +102,7 @@ export function SignupForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
           minLength={6}
-          className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+          className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-900 placeholder:text-zinc-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
         />
 
         {error && <p className="text-sm text-red-500">{error}</p>}
@@ -111,7 +118,10 @@ export function SignupForm() {
 
       <p className="text-center text-sm text-gray-500 mt-6">
         Already have an account?{" "}
-        <Link href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
+        <Link
+          href="/login"
+          className="text-blue-600 hover:text-blue-700 font-medium"
+        >
           Log in
         </Link>
       </p>

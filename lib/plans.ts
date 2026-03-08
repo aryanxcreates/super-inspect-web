@@ -35,7 +35,6 @@ export const PLAN_INFO: Record<Plan, PlanInfo> = {
       "Copy colors in HEX/RGB/HSL",
       "Copy font names & details",
       "Eyedropper color picker",
-      "Priority support",
     ],
   },
   lifetime: {
@@ -47,6 +46,7 @@ export const PLAN_INFO: Record<Plan, PlanInfo> = {
       "Pay once, use forever",
       "All future features included",
       "No recurring charges",
+      "Priority support",
     ],
   },
 };

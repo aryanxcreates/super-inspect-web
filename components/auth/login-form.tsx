@@ -20,7 +20,10 @@ export function LoginForm() {
     setError(null);
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     if (error) {
       setError(error.message);
@@ -60,7 +63,7 @@ export function LoginForm() {
 
       <div className="flex items-center gap-3 mb-6">
         <div className="flex-1 h-px bg-gray-200" />
-        <span className="text-xs text-gray-400">or</span>
+        <span className="text-xs text-zinc-500">or</span>
         <div className="flex-1 h-px bg-gray-200" />
       </div>
 
@@ -71,7 +74,7 @@ export function LoginForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+          className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-900 placeholder:text-zinc-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
         />
         <input
           type="password"
@@ -79,7 +82,7 @@ export function LoginForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+          className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-900 placeholder:text-zinc-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
         />
 
         {error && <p className="text-sm text-red-500">{error}</p>}
@@ -95,7 +98,10 @@ export function LoginForm() {
 
       <p className="text-center text-sm text-gray-500 mt-6">
         Don&apos;t have an account?{" "}
-        <Link href="/signup" className="text-blue-600 hover:text-blue-700 font-medium">
+        <Link
+          href="/signup"
+          className="text-blue-600 hover:text-blue-700 font-medium"
+        >
           Sign up
         </Link>
       </p>

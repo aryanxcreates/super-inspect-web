@@ -8,7 +8,9 @@ export const metadata = { title: "Billing — Snap Inspect" };
 
 export default async function BillingPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const profile = await prisma.profile.findUnique({
     where: { id: user!.id },
@@ -21,16 +23,21 @@ export default async function BillingPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-900 mb-1">Billing</h1>
-      <p className="text-sm text-gray-500 mb-8">Manage your subscription and plan</p>
+      <p className="text-sm text-gray-500 mb-8">
+        Manage your subscription and plan
+      </p>
 
       {/* Current plan */}
       <div className="bg-white rounded-xl border border-gray-200 p-6 mb-8">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500">Current plan</p>
-            <p className="text-xl font-bold text-gray-900 mt-1">{PLAN_INFO[currentPlan].name}</p>
-            <p className="text-sm text-gray-400 mt-0.5">
-              {PLAN_INFO[currentPlan].price} {PLAN_INFO[currentPlan].priceDetail}
+            <p className="text-xl font-bold text-gray-900 mt-1">
+              {PLAN_INFO[currentPlan].name}
+            </p>
+            <p className="text-sm text-zinc-500 mt-0.5">
+              {PLAN_INFO[currentPlan].price}{" "}
+              {PLAN_INFO[currentPlan].priceDetail}
             </p>
           </div>
           {hasCustomerId && (
@@ -57,28 +64,41 @@ export default async function BillingPage() {
             return (
               <div
                 key={planKey}
-                className={`rounded-xl p-6 ${
+                className={`rounded-xl p-6 flex flex-col min-h-[320px] ${
                   isPro
                     ? "bg-blue-600 text-white"
                     : "bg-white border border-gray-200"
                 }`}
               >
-                <h3 className={`text-sm font-semibold ${isPro ? "text-blue-200" : "text-gray-500"}`}>
+                <h3
+                  className={`text-sm font-semibold ${isPro ? "text-blue-200" : "text-gray-500"}`}
+                >
                   {plan.name}
                 </h3>
                 <div className="mt-3 flex items-baseline gap-1">
-                  <span className={`text-3xl font-bold ${isPro ? "text-white" : "text-gray-900"}`}>
+                  <span
+                    className={`text-3xl font-bold ${isPro ? "text-white" : "text-gray-900"}`}
+                  >
                     {plan.price}
                   </span>
-                  <span className={`text-sm ${isPro ? "text-blue-200" : "text-gray-400"}`}>
+                  <span
+                    className={`text-sm ${isPro ? "text-blue-200" : "text-zinc-500"}`}
+                  >
                     {plan.priceDetail}
                   </span>
                 </div>
-                <ul className="mt-4 flex flex-col gap-2">
+                <ul className="mt-4 flex flex-col gap-2 flex-1">
                   {plan.features.map((f) => (
                     <li key={f} className="flex items-center gap-2 text-sm">
-                      <Check size={14} className={isPro ? "text-blue-200" : "text-blue-500"} />
-                      <span className={isPro ? "text-blue-50" : "text-gray-600"}>{f}</span>
+                      <Check
+                        size={14}
+                        className={isPro ? "text-blue-200" : "text-blue-500"}
+                      />
+                      <span
+                        className={isPro ? "text-blue-50" : "text-gray-600"}
+                      >
+                        {f}
+                      </span>
                     </li>
                   ))}
                 </ul>
