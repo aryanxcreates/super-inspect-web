@@ -31,7 +31,7 @@ export function LoginForm() {
     router.push(redirect);
   };
 
-  const handleOAuth = async (provider: "google" | "github") => {
+  const handleOAuth = async (provider: "google") => {
     const supabase = createClient();
     await supabase.auth.signInWithOAuth({
       provider,
@@ -55,13 +55,6 @@ export function LoginForm() {
           className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
         >
           Google
-        </button>
-        <button
-          type="button"
-          onClick={() => handleOAuth("github")}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
-        >
-          GitHub
         </button>
       </div>
 
