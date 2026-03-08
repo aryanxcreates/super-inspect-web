@@ -1,6 +1,6 @@
 import { LoginForm } from "@/components/auth/login-form";
 
-export const metadata = { title: "Log In — Super Inspect" };
+export const metadata = { title: "Log In — Snap Inspect" };
 
 export default function LoginPage() {
   return (

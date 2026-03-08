@@ -1,6 +1,6 @@
 import { SignupForm } from "@/components/auth/signup-form";
 
-export const metadata = { title: "Sign Up — Super Inspect" };
+export const metadata = { title: "Sign Up — Snap Inspect" };
 
 export default function SignupPage() {
   return (

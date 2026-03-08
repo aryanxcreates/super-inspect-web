@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 
-export const metadata = { title: "Billing — Super Inspect" };
+export const metadata = { title: "Billing — Snap Inspect" };
 
 export default async function BillingPage() {
   const supabase = await createClient();

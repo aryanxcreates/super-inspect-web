@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Super Inspect — Your Design Toolkit for the Web",
+  title: "Snap Inspect — Your Design Toolkit for the Web",
   description:
     "Inspect elements, extract assets, pick colors, and analyze fonts. The all-in-one Chrome extension for designers and developers.",
 };

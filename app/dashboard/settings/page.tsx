@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 
-export const metadata = { title: "Settings — Super Inspect" };
+export const metadata = { title: "Settings — Snap Inspect" };
 
 export default async function SettingsPage() {
   const supabase = await createClient();
