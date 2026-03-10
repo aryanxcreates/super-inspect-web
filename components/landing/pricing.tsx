@@ -1,14 +1,9 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
 import { PLAN_INFO, type Plan } from "@/lib/plans";
+import { createClient } from "@/lib/supabase/server";
 
 const planOrder: Plan[] = ["trial", "pro", "lifetime"];
-
-function getCtaHref(planKey: Plan): string {
-  if (planKey === "trial") return "/signup";
-  if (planKey === "pro") return "/signup?plan=pro";
-  return "/signup?plan=lifetime";
-}
 
 function getCtaLabel(planKey: Plan): string {
   if (planKey === "trial") return "Start free trial";
@@ -16,7 +11,24 @@ function getCtaLabel(planKey: Plan): string {
   return "Buy lifetime";
 }
 
-export function Pricing() {
+export async function Pricing() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  function getCtaHref(planKey: Plan): string {
+    if (user) {
+      const productId =
+        planKey === "trial"
+          ? process.env.NEXT_PUBLIC_POLAR_TRIAL_PRODUCT_ID
+          : planKey === "pro"
+            ? process.env.NEXT_PUBLIC_POLAR_PRO_PRODUCT_ID
+            : process.env.NEXT_PUBLIC_POLAR_LIFETIME_PRODUCT_ID;
+      return `/api/checkout?products=${productId}&customerEmail=${user.email}`;
+    }
+    if (planKey === "trial") return "/signup";
+    return `/signup?plan=${planKey}`;
+  }
+
   return (
     <section id="pricing" className="py-20 md:py-28 bg-gray-50">
       <div className="max-w-5xl mx-auto px-6">
