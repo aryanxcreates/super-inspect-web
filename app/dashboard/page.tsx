@@ -8,11 +8,12 @@ import {
   Download, 
   BookOpen, 
   HelpCircle, 
-  Copy, 
-  Check,
-  Laptop
+  Laptop,
+  Sparkles,
+  Clock,
 } from "lucide-react";
 import { CopyButton } from "@/components/dashboard/copy-button";
+import Link from "next/link";
 
 export const metadata = { title: "Dashboard — InspectMode Pro" };
 
@@ -22,22 +23,23 @@ export default async function DashboardPage() {
 
   const profile = await prisma.profile.findUnique({
     where: { id: user!.id },
-    select: { plan: true, licenseKey: true, createdAt: true, email: true },
+    select: { plan: true, licenseKey: true, trialEndsAt: true, createdAt: true, email: true },
   });
 
   const plan = (profile?.plan ?? "free") as Plan;
-  const licenseKey = profile?.licenseKey ?? "No active license";
+  const licenseKey = profile?.licenseKey ?? null;
+  const trialEndsAt = profile?.trialEndsAt;
   const memberSince = profile?.createdAt 
     ? new Date(profile.createdAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
     : "Unknown";
 
-  // Mock data for devices since we don't have a table yet
-  const devices = [
-    { id: 1, name: "Chrome 145", type: "browser", os: "Windows 10/11", active: true, current: true, activatedAt: "Mar 3, 2026" },
-  ];
-  const maxDevices = 3;
-  const activeDevicesCount = devices.length;
-  const progressPercentage = (activeDevicesCount / maxDevices) * 100;
+  const isTrialExpired = plan === "trial" && trialEndsAt && new Date(trialEndsAt) < new Date();
+  const trialDaysLeft = trialEndsAt
+    ? Math.max(0, Math.ceil((new Date(trialEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    : 0;
+
+  const needsTrial = plan === "free";
+  const trialProductId = process.env.NEXT_PUBLIC_POLAR_TRIAL_PRODUCT_ID;
 
   return (
     <div className="space-y-8">
@@ -50,6 +52,68 @@ export default async function DashboardPage() {
           Manage your InspectMode Pro license and devices
         </p>
       </div>
+
+      {/* Start Free Trial Banner */}
+      {needsTrial && (
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white shadow-lg shadow-blue-500/20">
+          <div className="flex items-start gap-4">
+            <div className="p-3 bg-white/20 rounded-xl">
+              <Sparkles size={24} />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-xl font-bold mb-1">Start your free 7-day trial</h2>
+              <p className="text-blue-100 text-sm mb-5 max-w-md">
+                Get full access to all InspectMode Pro features for 7 days. No credit card required.
+              </p>
+              <Link
+                href={`/api/checkout?products=${trialProductId}&customerEmail=${user!.email}`}
+                className="inline-block px-6 py-2.5 bg-white text-blue-600 font-semibold text-sm rounded-xl hover:bg-blue-50 transition-colors"
+              >
+                Activate Free Trial
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Trial expiring/expired banner */}
+      {plan === "trial" && !isTrialExpired && trialDaysLeft <= 3 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6">
+          <div className="flex items-center gap-3">
+            <Clock size={20} className="text-amber-600" />
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-amber-900">
+                Your trial ends in {trialDaysLeft} day{trialDaysLeft !== 1 ? "s" : ""}
+              </p>
+              <p className="text-xs text-amber-700 mt-0.5">Upgrade to keep using InspectMode Pro</p>
+            </div>
+            <Link
+              href="/dashboard/billing"
+              className="px-4 py-2 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 transition-colors"
+            >
+              Upgrade now
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {isTrialExpired && (
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-6">
+          <div className="flex items-center gap-3">
+            <Clock size={20} className="text-red-600" />
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-red-900">Your trial has ended</p>
+              <p className="text-xs text-red-700 mt-0.5">Upgrade to Pro or Lifetime to continue using InspectMode Pro</p>
+            </div>
+            <Link
+              href="/dashboard/billing"
+              className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Upgrade now
+            </Link>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* License Details Card */}
@@ -69,16 +133,26 @@ export default async function DashboardPage() {
               <label className="text-sm font-medium text-gray-500">License Key</label>
               <div className="flex items-center gap-2">
                 <code className="flex-1 bg-gray-50 px-4 py-3 rounded-lg text-sm font-mono text-gray-900 border border-gray-200">
-                  {licenseKey}
+                  {licenseKey ?? "No active license"}
                 </code>
-                <CopyButton value={licenseKey} />
+                {licenseKey && <CopyButton value={licenseKey} />}
               </div>
+              {!licenseKey && needsTrial && (
+                <p className="text-xs text-gray-400">Start your free trial to get a license key</p>
+              )}
             </div>
 
             <div className="flex items-center justify-between py-2 border-b border-gray-50">
               <span className="text-sm font-medium text-gray-500">Plan</span>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gray-100 text-gray-800 uppercase tracking-wide">
-                {plan}
+              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide ${
+                plan === "lifetime" ? "bg-emerald-100 text-emerald-800" :
+                plan === "pro" ? "bg-blue-100 text-blue-800" :
+                plan === "trial" ? "bg-amber-100 text-amber-800" :
+                "bg-gray-100 text-gray-800"
+              }`}>
+                {plan === "free" ? "No plan" : plan}
+                {plan === "trial" && !isTrialExpired && ` — ${trialDaysLeft}d left`}
+                {isTrialExpired && " — expired"}
               </span>
             </div>
 
@@ -99,7 +173,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Active Devices & Quick Actions Column */}
+        {/* Quick Actions & Devices Column */}
         <div className="flex flex-col gap-8">
           
           {/* Active Devices Card */}
@@ -114,43 +188,18 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-xl transition-colors mb-6 cursor-pointer shadow-sm shadow-blue-200">
-              Activate Extension on This Device
-            </button>
-
             <div className="mb-6">
               <div className="flex justify-between text-sm font-medium mb-2">
-                <span className="text-gray-900">{activeDevicesCount} / {maxDevices} devices activated</span>
+                <span className="text-gray-900">0 / 3 devices activated</span>
               </div>
               <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-green-500 rounded-full transition-all duration-500 ease-out"
-                  style={{ width: `${progressPercentage}%` }}
-                />
+                <div className="h-full bg-green-500 rounded-full transition-all duration-500 ease-out" style={{ width: "0%" }} />
               </div>
             </div>
 
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-gray-900">Activated Devices</h3>
-              {devices.map((device) => (
-                <div key={device.id} className="flex items-center gap-4 p-3 bg-green-50/50 border border-green-100 rounded-xl">
-                  <div className="p-2 bg-white rounded-lg border border-green-100 text-gray-600">
-                    <Laptop size={18} />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-bold text-gray-900">{device.name}</p>
-                      {device.current && (
-                        <span className="px-1.5 py-0.5 bg-green-200 text-green-800 text-[10px] font-bold rounded uppercase tracking-wider">
-                          This Browser
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-gray-500">{device.os} • Activated {device.activatedAt}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <p className="text-sm text-gray-400">
+              Install the Chrome extension and log in to activate this device.
+            </p>
           </div>
 
           {/* Quick Actions Card */}
@@ -192,7 +241,7 @@ export default async function DashboardPage() {
                 <div className="text-gray-400 group-hover:translate-x-1 transition-transform">→</div>
               </a>
 
-              <a href="#" className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group">
+              <a href="mailto:contact@inspectmode.xyz" className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group">
                 <div className="flex items-center gap-4">
                   <div className="p-2 bg-green-100 text-green-600 rounded-lg group-hover:bg-green-200 transition-colors">
                     <HelpCircle size={18} />

@@ -2,7 +2,19 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import { PLAN_INFO, type Plan } from "@/lib/plans";
 
-const planOrder: Plan[] = ["free", "pro", "lifetime"];
+const planOrder: Plan[] = ["trial", "pro", "lifetime"];
+
+function getCtaHref(planKey: Plan): string {
+  if (planKey === "trial") return "/signup";
+  if (planKey === "pro") return "/signup?plan=pro";
+  return "/signup?plan=lifetime";
+}
+
+function getCtaLabel(planKey: Plan): string {
+  if (planKey === "trial") return "Start free trial";
+  if (planKey === "pro") return "Subscribe";
+  return "Buy lifetime";
+}
 
 export function Pricing() {
   return (
@@ -13,8 +25,7 @@ export function Pricing() {
             Simple, transparent pricing
           </h2>
           <p className="mt-4 text-gray-500 max-w-lg mx-auto">
-            Start free. Upgrade when you need the full power. Pay once for
-            lifetime access.
+            Start with a free 7-day trial. Upgrade when you're ready.
           </p>
         </div>
 
@@ -79,20 +90,14 @@ export function Pricing() {
                 </ul>
 
                 <Link
-                  href={
-                    planKey === "free" ? "/signup" : "/signup?plan=" + planKey
-                  }
+                  href={getCtaHref(planKey)}
                   className={`mt-8 block text-center px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
                     isHighlighted
                       ? "bg-white text-blue-600 hover:bg-blue-50"
                       : "bg-gray-900 text-white hover:bg-gray-800"
                   }`}
                 >
-                  {planKey === "free"
-                    ? "Get started"
-                    : planKey === "pro"
-                      ? "Subscribe"
-                      : "Buy lifetime"}
+                  {getCtaLabel(planKey)}
                 </Link>
               </div>
             );

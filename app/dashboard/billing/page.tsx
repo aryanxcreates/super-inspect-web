@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { PLAN_INFO, type Plan } from "@/lib/plans";
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 
 export const metadata = { title: "Billing — InspectMode Pro" };
@@ -12,12 +12,15 @@ export default async function BillingPage() {
 
   const profile = await prisma.profile.findUnique({
     where: { id: user!.id },
-    select: { plan: true, polarCustomerId: true },
+    select: { plan: true, polarCustomerId: true, trialEndsAt: true },
   });
 
   const currentPlan = (profile?.plan ?? "free") as Plan;
   const hasCustomerId = !!profile?.polarCustomerId;
-  const showUpgrade = currentPlan === "free" || currentPlan === "trial";
+  const trialEndsAt = profile?.trialEndsAt;
+  const isTrialExpired = currentPlan === "trial" && trialEndsAt && new Date(trialEndsAt) < new Date();
+  const showUpgrade = currentPlan === "free" || currentPlan === "trial" || isTrialExpired;
+  const showTrial = currentPlan === "free";
 
   return (
     <div>
@@ -29,7 +32,10 @@ export default async function BillingPage() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500">Current plan</p>
-            <p className="text-xl font-bold text-gray-900 mt-1">{PLAN_INFO[currentPlan].name}</p>
+            <p className="text-xl font-bold text-gray-900 mt-1">
+              {PLAN_INFO[currentPlan].name}
+              {isTrialExpired && <span className="text-red-500 text-sm font-normal ml-2">(expired)</span>}
+            </p>
             <p className="text-sm text-gray-400 mt-0.5">
               {PLAN_INFO[currentPlan].price} {PLAN_INFO[currentPlan].priceDetail}
             </p>
@@ -44,6 +50,27 @@ export default async function BillingPage() {
           )}
         </div>
       </div>
+
+      {/* Start free trial */}
+      {showTrial && (
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 mb-8 text-white">
+          <div className="flex items-center gap-4">
+            <div className="p-2 bg-white/20 rounded-lg">
+              <Sparkles size={20} />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-bold text-sm">Start your free 7-day trial</h3>
+              <p className="text-blue-100 text-xs mt-0.5">Full access to all features. No credit card required.</p>
+            </div>
+            <Link
+              href={`/api/checkout?products=${process.env.NEXT_PUBLIC_POLAR_TRIAL_PRODUCT_ID}&customerEmail=${user!.email}`}
+              className="px-5 py-2 bg-white text-blue-600 font-semibold text-sm rounded-lg hover:bg-blue-50 transition-colors"
+            >
+              Activate Trial
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Plan comparison */}
       {showUpgrade && (
