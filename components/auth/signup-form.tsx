@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 export function SignupForm() {
@@ -10,6 +11,11 @@ export function SignupForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+
+  const source = searchParams.get("source");
+  const returnTo = searchParams.get("returnTo");
+  const isExtension = source === "extension" && returnTo?.startsWith("chrome-extension://");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +27,9 @@ export function SignupForm() {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: isExtension
+          ? `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(returnTo!)}`
+          : `${window.location.origin}/auth/callback`,
       },
     });
 
@@ -37,10 +45,18 @@ export function SignupForm() {
 
   const handleOAuth = async (provider: "google") => {
     const supabase = createClient();
+
+    const callbackParams = new URLSearchParams();
+    if (isExtension && returnTo) {
+      callbackParams.set("redirect", `/login/extension-redirect?returnTo=${encodeURIComponent(returnTo)}`);
+    } else {
+      callbackParams.set("redirect", "/dashboard");
+    }
+
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?${callbackParams.toString()}`,
       },
     });
   };
@@ -66,8 +82,13 @@ export function SignupForm() {
           Create your account
         </h1>
         <p className="text-sm text-gray-500 mt-1">
-          Start using Snap Inspect for free
+          Start your free 7-day trial
         </p>
+        {isExtension && (
+          <p className="text-xs text-blue-600 mt-2 bg-blue-50 px-3 py-1.5 rounded-lg inline-block">
+            You'll be redirected back to the extension after signup
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col gap-3 mb-6">
@@ -119,7 +140,7 @@ export function SignupForm() {
       <p className="text-center text-sm text-gray-500 mt-6">
         Already have an account?{" "}
         <Link
-          href="/login"
+          href={isExtension ? `/login?source=extension&returnTo=${encodeURIComponent(returnTo!)}` : "/login"}
           className="text-blue-600 hover:text-blue-700 font-medium"
         >
           Log in

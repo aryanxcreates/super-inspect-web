@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Privacy Policy — Snap Inspect",
+  title: "Privacy Policy — InspectMode Pro",
 };
 
 export default function PrivacyPage() {
@@ -18,7 +18,7 @@ export default function PrivacyPage() {
         
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">1. Introduction</h2>
         <p className="text-gray-600 mb-4">
-          Welcome to Snap Inspect ("we," "our," or "us"). We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our website and tell you about your privacy rights and how the law protects you.
+          Welcome to InspectMode Pro ("we," "our," or "us"). We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our website and tell you about your privacy rights and how the law protects you.
         </p>
 
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. Data We Collect</h2>
@@ -49,7 +49,7 @@ export default function PrivacyPage() {
 
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">5. Contact Us</h2>
         <p className="text-gray-600 mb-4">
-          If you have any questions about this privacy policy or our privacy practices, please contact us at: <a href="mailto:support@snapinspect.dev" className="text-blue-600 hover:underline">support@snapinspect.dev</a>
+          If you have any questions about this privacy policy or our privacy practices, please contact us at: <a href="mailto:contact@inspectmode.xyz" className="text-blue-600 hover:underline">contact@inspectmode.xyz</a>
         </p>
       </div>
     </div>

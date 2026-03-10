@@ -28,7 +28,7 @@ export function DashboardShell({ user, plan, children }: DashboardShellProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Link href="/dashboard" className="text-xl font-bold text-gray-900 tracking-tight">
-              Snap <span className="text-blue-600">Inspect</span>
+              Inspect<span className="text-blue-600">Mode</span> Pro
             </Link>
           </div>
 
@@ -54,7 +54,7 @@ export function DashboardShell({ user, plan, children }: DashboardShellProps) {
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
-          <p>© {new Date().getFullYear()} Snap Inspect</p>
+          <p>© {new Date().getFullYear()} InspectMode Pro</p>
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-gray-900 transition-colors">Privacy</Link>
             <Link href="/terms" className="hover:text-gray-900 transition-colors">Terms</Link>

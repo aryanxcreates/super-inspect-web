@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Contact Us — Snap Inspect",
+  title: "Contact Us — InspectMode Pro",
 };
 
 export default function ContactPage() {
@@ -26,7 +26,7 @@ export default function ContactPage() {
           
           <div className="flex items-center gap-3 text-gray-700">
             <span className="font-medium">Email:</span>
-            <a href="mailto:support@snapinspect.dev" className="text-blue-600 hover:underline">support@snapinspect.dev</a>
+            <a href="mailto:contact@inspectmode.xyz" className="text-blue-600 hover:underline">contact@inspectmode.xyz</a>
           </div>
         </div>
 

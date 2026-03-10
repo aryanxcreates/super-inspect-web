@@ -1,6 +1,5 @@
-export type Plan = "free" | "pro" | "lifetime";
-export type Feature = "inspect" | "assets" | "colors" | "fonts";
-export type Action = "view" | "copy" | "download" | "edit" | "pick";
+export type Plan = "free" | "trial" | "pro" | "lifetime";
+export type AccessReason = "none" | "trial" | "subscription" | "lifetime" | "expired";
 
 export interface PlanInfo {
   name: string;
@@ -14,13 +13,20 @@ export const PLAN_INFO: Record<Plan, PlanInfo> = {
   free: {
     name: "Free",
     price: "$0",
-    priceDetail: "forever",
+    priceDetail: "",
+    features: ["No active plan"],
+  },
+  trial: {
+    name: "Trial",
+    price: "$0",
+    priceDetail: "7-day free trial",
     features: [
-      "View inspect data",
-      "View page assets",
-      "View color palette",
-      "View font list",
-      "Limited to viewing only",
+      "All inspection tools",
+      "Copy CSS properties",
+      "Download & copy assets",
+      "Copy colors in HEX/RGB/HSL",
+      "Copy font names & details",
+      "Eyedropper color picker",
     ],
   },
   pro: {
@@ -29,7 +35,7 @@ export const PLAN_INFO: Record<Plan, PlanInfo> = {
     priceDetail: "per month",
     highlighted: true,
     features: [
-      "Everything in Free",
+      "All inspection tools",
       "Copy CSS properties",
       "Download & copy assets",
       "Copy colors in HEX/RGB/HSL",
@@ -42,7 +48,7 @@ export const PLAN_INFO: Record<Plan, PlanInfo> = {
     price: "$29",
     priceDetail: "one-time payment",
     features: [
-      "Everything in Pro",
+      "All inspection tools",
       "Pay once, use forever",
       "All future features included",
       "No recurring charges",
@@ -50,3 +56,20 @@ export const PLAN_INFO: Record<Plan, PlanInfo> = {
     ],
   },
 };
+
+export function hasAccess(plan: Plan, trialEndsAt?: Date | string | null): boolean {
+  if (plan === "pro" || plan === "lifetime") return true;
+  if (plan === "trial" && trialEndsAt) {
+    return new Date(trialEndsAt) > new Date();
+  }
+  return false;
+}
+
+export function getAccessReason(plan: Plan, trialEndsAt?: Date | string | null): AccessReason {
+  if (plan === "lifetime") return "lifetime";
+  if (plan === "pro") return "subscription";
+  if (plan === "trial" && trialEndsAt) {
+    return new Date(trialEndsAt) > new Date() ? "trial" : "expired";
+  }
+  return "none";
+}

@@ -5,7 +5,7 @@ export function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="text-lg font-bold text-gray-900">
-          Snap<span className="text-blue-600">Inspect</span>
+          InspectMode <span className="text-blue-600">Pro</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-8 text-sm text-gray-500">

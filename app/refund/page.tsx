@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Refund Policy — Snap Inspect",
+  title: "Refund Policy — InspectMode Pro",
 };
 
 export default function RefundPage() {
@@ -18,7 +18,7 @@ export default function RefundPage() {
         
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">1. Refund Eligibility</h2>
         <p className="text-gray-600 mb-4">
-          We want you to be satisfied with Snap Inspect. If you are not completely satisfied with your purchase, we offer a refund within 14 days of your initial purchase.
+          We want you to be satisfied with InspectMode Pro. If you are not completely satisfied with your purchase, we offer a refund within 14 days of your initial purchase.
         </p>
         <p className="text-gray-600 mb-4">
           To be eligible for a refund:
@@ -41,7 +41,7 @@ export default function RefundPage() {
 
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">3. How to Request a Refund</h2>
         <p className="text-gray-600 mb-4">
-          To request a refund, please contact our support team at <a href="mailto:support@snapinspect.dev" className="text-blue-600 hover:underline">support@snapinspect.dev</a> with your order details and the reason for your request. We will review your request and notify you of the approval or rejection of your refund.
+          To request a refund, please contact our support team at <a href="mailto:contact@inspectmode.xyz" className="text-blue-600 hover:underline">contact@inspectmode.xyz</a> with your order details and the reason for your request. We will review your request and notify you of the approval or rejection of your refund.
         </p>
 
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">4. Processing Refunds</h2>

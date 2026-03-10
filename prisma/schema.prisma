@@ -14,6 +14,7 @@ model Profile {
   polarCustomerId      String?    @map("polar_customer_id")
   polarSubscriptionId  String?    @map("polar_subscription_id")
   licenseKey           String?    @map("license_key")
+  trialEndsAt          DateTime?  @map("trial_ends_at") @db.Timestamptz
   createdAt            DateTime   @default(now()) @map("created_at") @db.Timestamptz
   updatedAt            DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
 

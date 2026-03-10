@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Terms & Conditions — Snap Inspect",
+  title: "Terms & Conditions — InspectMode Pro",
 };
 
 export default function TermsPage() {
@@ -18,12 +18,12 @@ export default function TermsPage() {
         
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">1. Agreement to Terms</h2>
         <p className="text-gray-600 mb-4">
-          By accessing or using Snap Inspect, you agree to be bound by these Terms and Conditions and our Privacy Policy. If you do not agree to these terms, please do not use our services.
+          By accessing or using InspectMode Pro, you agree to be bound by these Terms and Conditions and our Privacy Policy. If you do not agree to these terms, please do not use our services.
         </p>
 
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. License</h2>
         <p className="text-gray-600 mb-4">
-          Snap Inspect grants you a revocable, non-exclusive, non-transferable, limited license to download, install and use the website/app strictly in accordance with the terms of this Agreement.
+          InspectMode Pro grants you a revocable, non-exclusive, non-transferable, limited license to download, install and use the website/app strictly in accordance with the terms of this Agreement.
         </p>
 
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">3. Restrictions</h2>
@@ -33,12 +33,12 @@ export default function TermsPage() {
         <ul className="list-disc pl-6 mb-4 text-gray-600 space-y-2">
           <li>License, sell, rent, lease, assign, distribute, transmit, host, outsource, disclose or otherwise commercially exploit the service or make the platform available to any third party.</li>
           <li>Modify, make derivative works of, disassemble, decrypt, reverse compile or reverse engineer any part of the service.</li>
-          <li>Remove, alter or obscure any proprietary notice (including any notice of copyright or trademark) of Snap Inspect or its affiliates, partners, suppliers or the licensors of the service.</li>
+          <li>Remove, alter or obscure any proprietary notice (including any notice of copyright or trademark) of InspectMode Pro or its affiliates, partners, suppliers or the licensors of the service.</li>
         </ul>
 
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">4. Intellectual Property</h2>
         <p className="text-gray-600 mb-4">
-          The service and its original content (excluding Content provided by you or other users), features and functionality are and will remain the exclusive property of Snap Inspect and its licensors.
+          The service and its original content (excluding Content provided by you or other users), features and functionality are and will remain the exclusive property of InspectMode Pro and its licensors.
         </p>
 
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">5. Termination</h2>
@@ -53,7 +53,7 @@ export default function TermsPage() {
         
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">7. Contact Us</h2>
         <p className="text-gray-600 mb-4">
-          If you have any questions about these Terms, please contact us at: <a href="mailto:support@snapinspect.dev" className="text-blue-600 hover:underline">support@snapinspect.dev</a>
+          If you have any questions about these Terms, please contact us at: <a href="mailto:contact@inspectmode.xyz" className="text-blue-600 hover:underline">contact@inspectmode.xyz</a>
         </p>
       </div>
     </div>
