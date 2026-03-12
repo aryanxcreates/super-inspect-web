@@ -1,4 +1,4 @@
-export type Plan = "free" | "trial" | "pro" | "lifetime";
+export type Plan = "free" | "trial" | "subscription" | "lifetime";
 export type AccessReason = "none" | "trial" | "subscription" | "lifetime" | "expired";
 
 export interface PlanInfo {
@@ -11,15 +11,15 @@ export interface PlanInfo {
 
 export const PLAN_INFO: Record<Plan, PlanInfo> = {
   free: {
-    name: "Free",
+    name: "Free (no license)",
     price: "$0",
     priceDetail: "",
     features: ["No active plan"],
   },
   trial: {
-    name: "Trial",
+    name: "Free trial",
     price: "$0",
-    priceDetail: "7-day free trial",
+    priceDetail: "Limited-time access (from Polar)",
     features: [
       "All inspection tools",
       "Copy CSS properties",
@@ -29,8 +29,8 @@ export const PLAN_INFO: Record<Plan, PlanInfo> = {
       "Eyedropper color picker",
     ],
   },
-  pro: {
-    name: "Pro",
+  subscription: {
+    name: "Subscription",
     price: "$9",
     priceDetail: "per month",
     highlighted: true,
@@ -58,7 +58,7 @@ export const PLAN_INFO: Record<Plan, PlanInfo> = {
 };
 
 export function hasAccess(plan: Plan, trialEndsAt?: Date | string | null): boolean {
-  if (plan === "pro" || plan === "lifetime") return true;
+  if (plan === "subscription" || plan === "lifetime") return true;
   if (plan === "trial" && trialEndsAt) {
     return new Date(trialEndsAt) > new Date();
   }
@@ -67,7 +67,7 @@ export function hasAccess(plan: Plan, trialEndsAt?: Date | string | null): boole
 
 export function getAccessReason(plan: Plan, trialEndsAt?: Date | string | null): AccessReason {
   if (plan === "lifetime") return "lifetime";
-  if (plan === "pro") return "subscription";
+  if (plan === "subscription") return "subscription";
   if (plan === "trial" && trialEndsAt) {
     return new Date(trialEndsAt) > new Date() ? "trial" : "expired";
   }

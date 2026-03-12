@@ -146,7 +146,7 @@ export default async function DashboardPage() {
               <span className="text-sm font-medium text-gray-500">Plan</span>
               <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide ${
                 plan === "lifetime" ? "bg-emerald-100 text-emerald-800" :
-                plan === "pro" ? "bg-blue-100 text-blue-800" :
+                plan === "subscription" ? "bg-blue-100 text-blue-800" :
                 plan === "trial" ? "bg-amber-100 text-amber-800" :
                 "bg-gray-100 text-gray-800"
               }`}>

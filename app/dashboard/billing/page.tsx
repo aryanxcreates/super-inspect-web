@@ -51,7 +51,7 @@ export default async function BillingPage() {
         </div>
       </div>
 
-      {/* Start free trial */}
+      {/* Start free plan (trial) */}
       {showTrial && (
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 mb-8 text-white">
           <div className="flex items-center gap-4">
@@ -59,8 +59,8 @@ export default async function BillingPage() {
               <Sparkles size={20} />
             </div>
             <div className="flex-1">
-              <h3 className="font-bold text-sm">Start your free 7-day trial</h3>
-              <p className="text-blue-100 text-xs mt-0.5">Full access to all features. No credit card required.</p>
+                <h3 className="font-bold text-sm">Start your free plan</h3>
+                <p className="text-blue-100 text-xs mt-0.5">Full access for the trial period. No credit card required.</p>
             </div>
             <Link
               href={`/api/checkout?products=${process.env.NEXT_PUBLIC_POLAR_TRIAL_PRODUCT_ID}&customerEmail=${user!.email}`}
@@ -72,53 +72,53 @@ export default async function BillingPage() {
         </div>
       )}
 
-      {/* Plan comparison */}
+      {/* Plan comparison: subscription vs lifetime */}
       {showUpgrade && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {(["pro", "lifetime"] as Plan[]).map((planKey) => {
+          {(["subscription", "lifetime"] as Plan[]).map((planKey) => {
             const plan = PLAN_INFO[planKey];
-            const isPro = planKey === "pro";
-            const productParam = isPro
-              ? process.env.NEXT_PUBLIC_POLAR_PRO_PRODUCT_ID
+            const isSubscriptionPlan = planKey === "subscription";
+            const productParam = isSubscriptionPlan
+              ? process.env.NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRODUCT_ID
               : process.env.NEXT_PUBLIC_POLAR_LIFETIME_PRODUCT_ID;
 
             return (
               <div
                 key={planKey}
                 className={`rounded-xl p-6 ${
-                  isPro
+                  isSubscriptionPlan
                     ? "bg-blue-600 text-white"
                     : "bg-white border border-gray-200"
                 }`}
               >
-                <h3 className={`text-sm font-semibold ${isPro ? "text-blue-200" : "text-gray-500"}`}>
+                <h3 className={`text-sm font-semibold ${isSubscriptionPlan ? "text-blue-200" : "text-gray-500"}`}>
                   {plan.name}
                 </h3>
                 <div className="mt-3 flex items-baseline gap-1">
-                  <span className={`text-3xl font-bold ${isPro ? "text-white" : "text-gray-900"}`}>
+                  <span className={`text-3xl font-bold ${isSubscriptionPlan ? "text-white" : "text-gray-900"}`}>
                     {plan.price}
                   </span>
-                  <span className={`text-sm ${isPro ? "text-blue-200" : "text-gray-400"}`}>
+                  <span className={`text-sm ${isSubscriptionPlan ? "text-blue-200" : "text-gray-400"}`}>
                     {plan.priceDetail}
                   </span>
                 </div>
                 <ul className="mt-4 flex flex-col gap-2">
                   {plan.features.map((f) => (
                     <li key={f} className="flex items-center gap-2 text-sm">
-                      <Check size={14} className={isPro ? "text-blue-200" : "text-blue-500"} />
-                      <span className={isPro ? "text-blue-50" : "text-gray-600"}>{f}</span>
+                      <Check size={14} className={isSubscriptionPlan ? "text-blue-200" : "text-blue-500"} />
+                      <span className={isSubscriptionPlan ? "text-blue-50" : "text-gray-600"}>{f}</span>
                     </li>
                   ))}
                 </ul>
                 <Link
                   href={`/api/checkout?products=${productParam}&customerEmail=${user!.email}`}
                   className={`mt-6 block text-center px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                    isPro
+                    isSubscriptionPlan
                       ? "bg-white text-blue-600 hover:bg-blue-50"
                       : "bg-gray-900 text-white hover:bg-gray-800"
                   }`}
                 >
-                  {isPro ? "Subscribe to Pro" : "Get Lifetime Access"}
+                  {isSubscriptionPlan ? "Subscribe" : "Get Lifetime Access"}
                 </Link>
               </div>
             );

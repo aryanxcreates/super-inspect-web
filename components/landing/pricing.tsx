@@ -3,11 +3,11 @@ import { Check } from "lucide-react";
 import { PLAN_INFO, type Plan } from "@/lib/plans";
 import { createClient } from "@/lib/supabase/server";
 
-const planOrder: Plan[] = ["trial", "pro", "lifetime"];
+const planOrder: Plan[] = ["trial", "subscription", "lifetime"];
 
 function getCtaLabel(planKey: Plan): string {
   if (planKey === "trial") return "Start free trial";
-  if (planKey === "pro") return "Subscribe";
+  if (planKey === "subscription") return "Subscribe";
   return "Buy lifetime";
 }
 
@@ -20,8 +20,8 @@ export async function Pricing() {
       const productId =
         planKey === "trial"
           ? process.env.NEXT_PUBLIC_POLAR_TRIAL_PRODUCT_ID
-          : planKey === "pro"
-            ? process.env.NEXT_PUBLIC_POLAR_PRO_PRODUCT_ID
+          : planKey === "subscription"
+            ? process.env.NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRODUCT_ID
             : process.env.NEXT_PUBLIC_POLAR_LIFETIME_PRODUCT_ID;
       return `/api/checkout?products=${productId}&customerEmail=${user.email}`;
     }
