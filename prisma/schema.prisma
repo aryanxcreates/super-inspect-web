@@ -13,6 +13,7 @@ model Profile {
   plan                 String     @default("free")
   polarCustomerId      String?    @map("polar_customer_id")
   polarProductId       String?    @map("polar_product_id")
+  polarBenefitId       String?    @map("polar_benefit_id")
   licenseKey           String?    @map("license_key")
   trialEndsAt          DateTime?  @map("trial_ends_at") @db.Timestamptz
   createdAt            DateTime   @default(now()) @map("created_at") @db.Timestamptz

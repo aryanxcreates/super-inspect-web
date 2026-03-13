@@ -1,16 +1,16 @@
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import type { Plan } from "@/lib/plans";
-import { 
-  ShieldCheck, 
-  Monitor, 
-  Zap, 
-  Download, 
-  BookOpen, 
-  HelpCircle, 
-  Laptop,
+import {
+  ShieldCheck,
+  Monitor,
+  Zap,
+  Download,
+  BookOpen,
+  HelpCircle,
   Sparkles,
   Clock,
+  Crown,
 } from "lucide-react";
 import { CopyButton } from "@/components/dashboard/copy-button";
 import Link from "next/link";
@@ -40,6 +40,8 @@ export default async function DashboardPage() {
 
   const needsTrial = plan === "free";
   const trialProductId = process.env.NEXT_PUBLIC_POLAR_TRIAL_PRODUCT_ID;
+  const lifetimeProductId = process.env.NEXT_PUBLIC_POLAR_LIFETIME_PRODUCT_ID;
+  const showLifetimeCta = plan !== "lifetime" && lifetimeProductId;
 
   return (
     <div className="space-y-8">
@@ -110,6 +112,34 @@ export default async function DashboardPage() {
               className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
             >
               Upgrade now
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Lifetime deal CTA — show for free, trial, and subscription */}
+      {showLifetimeCta && (
+        <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            <div className="p-3 bg-blue-50 rounded-xl text-blue-600">
+              <Crown size={24} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-blue-600 text-sm font-medium mb-0.5">One-time purchase</p>
+              <h2 className="text-xl font-bold text-gray-900 mb-1">
+                Upgrade to lifetime access
+              </h2>
+              <p className="text-gray-500 text-sm max-w-xl">
+                {plan === "subscription"
+                  ? "Stop monthly payments. Own InspectMode Pro forever with a single purchase."
+                  : "Pay once, unlock all features for life. No subscriptions, no renewals."}
+              </p>
+            </div>
+            <Link
+              href={`/api/checkout?products=${lifetimeProductId}&customerEmail=${encodeURIComponent(user!.email ?? "")}`}
+              className="shrink-0 px-5 py-2.5 bg-gray-900 text-white text-sm font-semibold rounded-xl hover:bg-gray-800 transition-colors"
+            >
+              Get Lifetime Access →
             </Link>
           </div>
         </div>

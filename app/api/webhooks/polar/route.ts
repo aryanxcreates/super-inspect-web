@@ -1,6 +1,7 @@
 import { Webhooks } from "@polar-sh/nextjs";
 import { prisma } from "@/lib/prisma";
 import { polar } from "@/lib/polar";
+import { POLAR_BENEFIT_IDS } from "@/lib/polar-config";
 import type {
   LicenseItem,
   LicensePage,
@@ -11,6 +12,26 @@ import type {
   SubscriptionCreatedPayload,
 } from "@/lib/polar-webhook.types";
 
+const PLACEHOLDER_UUID = "00000000-0000-0000-0000-000000000000";
+
+function isValidBenefitId(id: string): boolean {
+  return id !== "" && id !== PLACEHOLDER_UUID;
+}
+
+/** Resolve Polar benefit ID for a product (used to filter license keys by benefit). */
+function getBenefitIdForProductId(productId: string): string | null {
+  if (productId === process.env.NEXT_PUBLIC_POLAR_TRIAL_PRODUCT_ID) {
+    return isValidBenefitId(POLAR_BENEFIT_IDS.trial) ? POLAR_BENEFIT_IDS.trial : null;
+  }
+  if (productId === process.env.NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRODUCT_ID) {
+    return isValidBenefitId(POLAR_BENEFIT_IDS.subscription) ? POLAR_BENEFIT_IDS.subscription : null;
+  }
+  if (productId === process.env.NEXT_PUBLIC_POLAR_LIFETIME_PRODUCT_ID) {
+    return isValidBenefitId(POLAR_BENEFIT_IDS.lifetime) ? POLAR_BENEFIT_IDS.lifetime : null;
+  }
+  return null;
+}
+
 function normalizeLicenseItem(raw: RawLicenseItem): LicenseItem {
   return {
     key: raw.key ?? null,
@@ -20,7 +41,10 @@ function normalizeLicenseItem(raw: RawLicenseItem): LicenseItem {
   };
 }
 
-async function fetchLicenseForCustomer(polarCustomerId: string): Promise<LicenseResult> {
+async function fetchLicenseForCustomer(
+  polarCustomerId: string,
+  benefitId?: string | null
+): Promise<LicenseResult> {
   const organizationId = process.env.POLAR_ORGANIZATION_ID;
   if (!organizationId) {
     return { key: null, expiresAt: null };
@@ -28,6 +52,7 @@ async function fetchLicenseForCustomer(polarCustomerId: string): Promise<License
 
   const result = await polar.licenseKeys.list({
     organizationId,
+    benefitId: benefitId ?? undefined,
     limit: 100,
   });
 
@@ -75,11 +100,13 @@ export const POST = Webhooks({
       });
       if (!profile) return;
 
+      const benefitId = sub.productId ? getBenefitIdForProductId(sub.productId) : null;
       await prisma.profile.update({
         where: { id: profile.id },
         data: {
           polarCustomerId: sub.customerId,
           polarProductId: sub.productId ?? undefined,
+          polarBenefitId: benefitId ?? undefined,
         },
       });
     } catch (err) {
@@ -101,6 +128,7 @@ export const POST = Webhooks({
         data: {
           plan: "free",
           polarProductId: null,
+          polarBenefitId: null,
           trialEndsAt: null,
         },
       });
@@ -135,10 +163,12 @@ export const POST = Webhooks({
       });
       if (!profile) return;
 
+      const benefitId = getBenefitIdForProductId(productId);
+
       let licenseKey: string | null = null;
       let licenseExpiresAt: Date | null = null;
       try {
-        const license = await fetchLicenseForCustomer(order.customerId);
+        const license = await fetchLicenseForCustomer(order.customerId, benefitId);
         licenseKey = license.key;
         if (license.expiresAt) {
           licenseExpiresAt = new Date(license.expiresAt);
@@ -156,6 +186,7 @@ export const POST = Webhooks({
           plan,
           polarCustomerId: order.customerId,
           polarProductId: productId,
+          polarBenefitId: benefitId ?? undefined,
           licenseKey: licenseKey ?? undefined,
           trialEndsAt,
         },

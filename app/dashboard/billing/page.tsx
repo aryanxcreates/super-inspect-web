@@ -19,8 +19,12 @@ export default async function BillingPage() {
   const hasCustomerId = !!profile?.polarCustomerId;
   const trialEndsAt = profile?.trialEndsAt;
   const isTrialExpired = currentPlan === "trial" && trialEndsAt && new Date(trialEndsAt) < new Date();
-  const showUpgrade = currentPlan === "free" || currentPlan === "trial" || isTrialExpired;
   const showTrial = currentPlan === "free";
+  /** Show plan cards: when free/trial/expired (choose plan) or subscription (upgrade to lifetime). Hide when already lifetime. */
+  const showPlanCards =
+    currentPlan === "free" || currentPlan === "trial" || isTrialExpired || currentPlan === "subscription";
+  const isSubscription = currentPlan === "subscription";
+  const isLifetime = currentPlan === "lifetime";
 
   return (
     <div>
@@ -72,8 +76,15 @@ export default async function BillingPage() {
         </div>
       )}
 
-      {/* Plan comparison: subscription vs lifetime */}
-      {showUpgrade && (
+      {/* Lifetime only: no upgrade options */}
+      {isLifetime && (
+        <div className="bg-white rounded-xl border border-gray-200 p-6 text-center">
+          <p className="text-gray-600">You have lifetime access. No further action needed.</p>
+        </div>
+      )}
+
+      {/* Plan comparison: subscription vs lifetime (choose plan or upgrade from subscription) */}
+      {showPlanCards && !isLifetime && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {(["subscription", "lifetime"] as Plan[]).map((planKey) => {
             const plan = PLAN_INFO[planKey];
@@ -81,6 +92,21 @@ export default async function BillingPage() {
             const productParam = isSubscriptionPlan
               ? process.env.NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRODUCT_ID
               : process.env.NEXT_PUBLIC_POLAR_LIFETIME_PRODUCT_ID;
+            const showAsCurrent = isSubscriptionPlan && isSubscription;
+            const checkoutHref = `/api/checkout?products=${productParam}&customerEmail=${encodeURIComponent(user!.email ?? "")}`;
+
+            let ctaLabel: string;
+            let ctaHref: string | null;
+            if (showAsCurrent) {
+              ctaLabel = "Current plan";
+              ctaHref = null;
+            } else if (isSubscriptionPlan) {
+              ctaLabel = "Subscribe";
+              ctaHref = checkoutHref;
+            } else {
+              ctaLabel = isSubscription ? "Upgrade to Lifetime" : "Get Lifetime Access";
+              ctaHref = checkoutHref;
+            }
 
             return (
               <div
@@ -91,6 +117,11 @@ export default async function BillingPage() {
                     : "bg-white border border-gray-200"
                 }`}
               >
+                {showAsCurrent && (
+                  <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-white/20 text-blue-100 mb-2">
+                    Current plan
+                  </span>
+                )}
                 <h3 className={`text-sm font-semibold ${isSubscriptionPlan ? "text-blue-200" : "text-gray-500"}`}>
                   {plan.name}
                 </h3>
@@ -110,16 +141,22 @@ export default async function BillingPage() {
                     </li>
                   ))}
                 </ul>
-                <Link
-                  href={`/api/checkout?products=${productParam}&customerEmail=${user!.email}`}
-                  className={`mt-6 block text-center px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                    isSubscriptionPlan
-                      ? "bg-white text-blue-600 hover:bg-blue-50"
-                      : "bg-gray-900 text-white hover:bg-gray-800"
-                  }`}
-                >
-                  {isSubscriptionPlan ? "Subscribe" : "Get Lifetime Access"}
-                </Link>
+                {ctaHref ? (
+                  <Link
+                    href={ctaHref}
+                    className={`mt-6 block text-center px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                      isSubscriptionPlan
+                        ? "bg-white text-blue-600 hover:bg-blue-50"
+                        : "bg-gray-900 text-white hover:bg-gray-800"
+                    }`}
+                  >
+                    {ctaLabel}
+                  </Link>
+                ) : (
+                  <div className="mt-6 text-center px-4 py-2.5 rounded-xl text-sm font-semibold bg-white/20 text-blue-100 cursor-default">
+                    {ctaLabel}
+                  </div>
+                )}
               </div>
             );
           })}
