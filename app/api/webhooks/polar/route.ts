@@ -1,21 +1,29 @@
 import { Webhooks } from "@polar-sh/nextjs";
 import { prisma } from "@/lib/prisma";
 import { polar } from "@/lib/polar";
+import type {
+  LicenseItem,
+  LicensePage,
+  LicenseResult,
+  OrderPaidPayload,
+  RawLicenseItem,
+  SubscriptionCanceledPayload,
+  SubscriptionCreatedPayload,
+} from "@/lib/polar-webhook.types";
 
-/**
- * Look up the current Polar license for a given Polar customer id.
- *
- * Uses the TypeScript SDK to list license keys for the configured organization
- * and tries to find a key whose `customer_id` matches `polarCustomerId`. Falls
- * back to the first key on the first page if there is no direct match.
- * Returns `{ key, expiresAt }` where both fields can be `null` if no license
- * can be resolved.
- */
-async function fetchLicenseForCustomer(polarCustomerId: string) {
+function normalizeLicenseItem(raw: RawLicenseItem): LicenseItem {
+  return {
+    key: raw.key ?? null,
+    customer_id: raw.customer_id ?? raw.customerId ?? null,
+    expires_at: raw.expires_at ?? raw.expiresAt ?? null,
+    created_at: raw.created_at ?? raw.createdAt ?? null,
+  };
+}
+
+async function fetchLicenseForCustomer(polarCustomerId: string): Promise<LicenseResult> {
   const organizationId = process.env.POLAR_ORGANIZATION_ID;
-
   if (!organizationId) {
-    return { key: null as string | null, expiresAt: null as string | null };
+    return { key: null, expiresAt: null };
   }
 
   const result = await polar.licenseKeys.list({
@@ -23,149 +31,138 @@ async function fetchLicenseForCustomer(polarCustomerId: string) {
     limit: 100,
   });
 
-  for await (const page of result as any) {
-    const items =
-      (page as {
-        items?: Array<{
-          key?: string | null;
-          customer_id?: string | null;
-          expires_at?: string | null;
-        }>;
-      }).items ?? [];
-
-    const matchForCustomer =
-      items.find(
-        (item) => item.customer_id && item.customer_id === polarCustomerId
-      ) ?? items[0];
-
-    if (matchForCustomer?.key) {
-      return {
-        key: matchForCustomer.key ?? null,
-        expiresAt: matchForCustomer.expires_at ?? null,
-      };
-    }
+  const allItems: LicenseItem[] = [];
+  for await (const page of result as AsyncIterable<LicensePage>) {
+    const rawList = Array.isArray(page) ? page : (page.result?.items ?? page.items ?? []);
+    allItems.push(...rawList.map(normalizeLicenseItem));
   }
 
-  return { key: null, expiresAt: null };
+  const forCustomer = allItems.filter(
+    (item) => item.customer_id && item.customer_id === polarCustomerId
+  );
+  const candidates = forCustomer.length > 0 ? forCustomer : allItems;
+  const withKey = candidates.filter((item) => item.key != null);
+  const sorted = [...withKey].sort((a, b) =>
+    (b.created_at ?? "").localeCompare(a.created_at ?? "")
+  );
+  const best = sorted[0] ?? null;
+
+  if (!best?.key) {
+    return { key: null, expiresAt: null };
+  }
+
+  return {
+    key: best.key,
+    expiresAt: best.expires_at,
+  };
 }
 
-/**
- * Webhook endpoint that keeps local profiles in sync with Polar.
- *
- * - onSubscriptionCreated: attach Polar customer & subscription ids
- *   to an existing profile.
- * - onSubscriptionCanceled: reset the profile back to a free plan
- *   when the subscription is canceled.
- * - onOrderPaid: when a plan-related order is paid (trial/pro/lifetime),
- *   fetch the Polar license key and update the profile's plan, license key,
- *   and trial window accordingly.
- */
 export const POST = Webhooks({
   webhookSecret: process.env.POLAR_WEBHOOK_SECRET!,
 
   onSubscriptionCreated: async (payload) => {
-    const sub = payload.data;
-    const customerId = sub.customerId;
-    const email = sub.customer.email;
+    try {
+      const sub = payload.data as SubscriptionCreatedPayload;
+      const email = sub.customer?.email;
+      if (!email) {
+        console.error("[polar:webhook] onSubscriptionCreated: missing customer email");
+        return;
+      }
 
-    const profile = await prisma.profile.findFirst({
-      where: { email },
-      select: { id: true },
-    });
+      const profile = await prisma.profile.findFirst({
+        where: { email },
+        select: { id: true },
+      });
+      if (!profile) return;
 
-    if (!profile) return;
-
-    await prisma.profile.update({
-      where: { id: profile.id },
-      data: {
-        polarCustomerId: customerId,
-        polarSubscriptionId: sub.id,
-      },
-    });
+      await prisma.profile.update({
+        where: { id: profile.id },
+        data: {
+          polarCustomerId: sub.customerId,
+          polarProductId: sub.productId ?? undefined,
+        },
+      });
+    } catch (err) {
+      console.error("[polar:webhook] onSubscriptionCreated error", err);
+      throw err;
+    }
   },
 
   onSubscriptionCanceled: async (payload) => {
-    const sub = payload.data;
-    const customerId = sub.customerId;
-
-    await prisma.profile.updateMany({
-      where: { polarCustomerId: customerId },
-      data: {
-        plan: "free",
-        polarSubscriptionId: null,
-        trialEndsAt: null,
-      },
-    });
+    try {
+      const sub = payload.data as SubscriptionCanceledPayload;
+      const customerId = sub.customerId;
+      if (!customerId) {
+        console.error("[polar:webhook] onSubscriptionCanceled: missing customerId");
+        return;
+      }
+      await prisma.profile.updateMany({
+        where: { polarCustomerId: customerId },
+        data: {
+          plan: "free",
+          polarProductId: null,
+          trialEndsAt: null,
+        },
+      });
+    } catch (err) {
+      console.error("[polar:webhook] onSubscriptionCanceled error", err);
+      throw err;
+    }
   },
 
   onOrderPaid: async (payload) => {
-    const order = payload.data;
-    const email = order.customer.email;
-    const productId = order.productId;
-
-    const isSubscription =
-      productId === process.env.NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRODUCT_ID;
-    const isLifetime =
-      productId === process.env.NEXT_PUBLIC_POLAR_LIFETIME_PRODUCT_ID;
-    const isTrial =
-      productId === process.env.NEXT_PUBLIC_POLAR_TRIAL_PRODUCT_ID;
-
-    if (!isSubscription && !isLifetime && !isTrial) return;
-
-    const profile = await prisma.profile.findFirst({
-      where: { email },
-      select: { id: true },
-    });
-
-    if (!profile) return;
-
-    // Try to fetch the actual license key + expiry from Polar
-    let licenseKey: string | null = null;
-    let licenseExpiresAt: Date | null = null;
     try {
-      const license = await fetchLicenseForCustomer(order.customerId);
-      licenseKey = license.key;
-      if (license.expiresAt) {
-        licenseExpiresAt = new Date(license.expiresAt);
+      const order = payload.data as OrderPaidPayload;
+      const email = order.customer?.email;
+      if (!email) {
+        console.error("[polar:webhook] onOrderPaid: missing customer email");
+        return;
       }
-    } catch {
-      licenseKey = null;
-      licenseExpiresAt = null;
-    }
 
-    // Use Polar's own license expiry if present; otherwise leave as null.
-    const trialEndsAt = licenseExpiresAt ?? null;
+      const productId = order.productId;
+      const isSubscription =
+        productId === process.env.NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRODUCT_ID;
+      const isLifetime =
+        productId === process.env.NEXT_PUBLIC_POLAR_LIFETIME_PRODUCT_ID;
+      const isTrial =
+        productId === process.env.NEXT_PUBLIC_POLAR_TRIAL_PRODUCT_ID;
 
-    if (isSubscription) {
+      if (!isSubscription && !isLifetime && !isTrial) return;
+
+      const profile = await prisma.profile.findFirst({
+        where: { email },
+        select: { id: true },
+      });
+      if (!profile) return;
+
+      let licenseKey: string | null = null;
+      let licenseExpiresAt: Date | null = null;
+      try {
+        const license = await fetchLicenseForCustomer(order.customerId);
+        licenseKey = license.key;
+        if (license.expiresAt) {
+          licenseExpiresAt = new Date(license.expiresAt);
+        }
+      } catch (err) {
+        console.error("[polar:webhook] fetchLicenseForCustomer error", err);
+      }
+
+      const trialEndsAt = licenseExpiresAt;
+      const plan = isSubscription ? "subscription" : isLifetime ? "lifetime" : "trial";
+
       await prisma.profile.update({
         where: { id: profile.id },
         data: {
-          plan: "subscription",
+          plan,
           polarCustomerId: order.customerId,
+          polarProductId: productId,
           licenseKey: licenseKey ?? undefined,
           trialEndsAt,
         },
       });
-    } else if (isLifetime) {
-      await prisma.profile.update({
-        where: { id: profile.id },
-        data: {
-          plan: "lifetime",
-          polarCustomerId: order.customerId,
-          licenseKey: licenseKey ?? undefined,
-          trialEndsAt,
-        },
-      });
-    } else if (isTrial) {
-      await prisma.profile.update({
-        where: { id: profile.id },
-        data: {
-          plan: "trial",
-          polarCustomerId: order.customerId,
-          trialEndsAt,
-          licenseKey: licenseKey ?? undefined,
-        },
-      });
+    } catch (err) {
+      console.error("[polar:webhook] onOrderPaid error", err);
+      throw err;
     }
   },
 });

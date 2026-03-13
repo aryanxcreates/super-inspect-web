@@ -12,7 +12,7 @@ model Profile {
   email                String?
   plan                 String     @default("free")
   polarCustomerId      String?    @map("polar_customer_id")
-  polarSubscriptionId  String?    @map("polar_subscription_id")
+  polarProductId       String?    @map("polar_product_id")
   licenseKey           String?    @map("license_key")
   trialEndsAt          DateTime?  @map("trial_ends_at") @db.Timestamptz
   createdAt            DateTime   @default(now()) @map("created_at") @db.Timestamptz
