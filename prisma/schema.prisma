@@ -19,10 +19,24 @@ model Profile {
   createdAt            DateTime   @default(now()) @map("created_at") @db.Timestamptz
   updatedAt            DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
 
-  usageLogs UsageLog[]
+  usageLogs       UsageLog[]
+  deviceActivations DeviceActivation[]
 
   @@index([licenseKey], name: "idx_profiles_license_key")
   @@map("profiles")
+}
+
+model DeviceActivation {
+  id                 String   @id @default(uuid()) @db.Uuid
+  profileId          String   @map("profile_id") @db.Uuid
+  polarActivationId  String   @unique @map("polar_activation_id") @db.Uuid
+  label              String   @db.VarChar(512)
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId], name: "idx_device_activations_profile_id")
+  @@map("device_activations")
 }
 
 model UsageLog {

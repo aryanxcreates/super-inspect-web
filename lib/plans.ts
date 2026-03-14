@@ -73,3 +73,15 @@ export function getAccessReason(plan: Plan, trialEndsAt?: Date | string | null):
   }
   return "none";
 }
+
+/** Max devices that can be activated per plan. Trial/subscription = 1, lifetime = 3. */
+export function getMaxDevices(plan: Plan): number {
+  if (plan === "lifetime") return 3;
+  if (plan === "trial" || plan === "subscription") return 1;
+  return 0;
+}
+
+/** Only lifetime users can deactivate a device from the dashboard. Trial/subscription are locked to one device. */
+export function canDeactivateDevices(plan: Plan): boolean {
+  return plan === "lifetime";
+}

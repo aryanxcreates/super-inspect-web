@@ -28,6 +28,3 @@ export const POLAR_BENEFIT_IDS = isProduction
   : POLAR_BENEFIT_IDS_SANDBOX;
 
 export type PolarPlanKey = keyof typeof POLAR_BENEFIT_IDS;
-
-
-"64a981e3-1467-4eeb-aee1-40963fbea833"

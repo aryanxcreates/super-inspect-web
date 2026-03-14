@@ -2,11 +2,12 @@ import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { signToken } from "@/lib/jwt";
 import { hasAccess, getAccessReason } from "@/lib/plans";
+import { polarValidate } from "@/lib/polar-activations";
 import type { Plan } from "@/lib/plans";
 
 export async function POST(request: NextRequest) {
   try {
-    const { licenseKey } = await request.json();
+    const { licenseKey, activationId } = await request.json();
 
     if (!licenseKey || typeof licenseKey !== "string") {
       return NextResponse.json(
@@ -25,7 +26,15 @@ export async function POST(request: NextRequest) {
     }
 
     const plan = profile.plan as Plan;
-    const access = hasAccess(plan, profile.trialEndsAt);
+    let access = hasAccess(plan, profile.trialEndsAt);
+
+    if (access && activationId && typeof activationId === "string") {
+      const { valid } = await polarValidate(licenseKey.trim(), activationId);
+      if (!valid) {
+        access = false;
+      }
+    }
+
     const reason = getAccessReason(plan, profile.trialEndsAt);
 
     const accessToken = await signToken({

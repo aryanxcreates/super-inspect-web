@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma";
 import type { Plan } from "@/lib/plans";
 import {
   ShieldCheck,
-  Monitor,
   Zap,
   Download,
   BookOpen,
@@ -13,6 +12,7 @@ import {
   Crown,
 } from "lucide-react";
 import { CopyButton } from "@/components/dashboard/copy-button";
+import { ActiveDevices } from "@/components/dashboard/active-devices";
 import Link from "next/link";
 
 export const metadata = { title: "Dashboard — InspectMode Pro" };
@@ -207,30 +207,7 @@ export default async function DashboardPage() {
         <div className="flex flex-col gap-8">
           
           {/* Active Devices Card */}
-          <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="p-3 bg-green-50 rounded-xl text-green-600">
-                <Monitor size={24} />
-              </div>
-              <div>
-                <h2 className="text-lg font-bold text-gray-900">Active Devices</h2>
-                <p className="text-gray-500 text-sm">Manage your activated devices</p>
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <div className="flex justify-between text-sm font-medium mb-2">
-                <span className="text-gray-900">0 / 3 devices activated</span>
-              </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full bg-green-500 rounded-full transition-all duration-500 ease-out" style={{ width: "0%" }} />
-              </div>
-            </div>
-
-            <p className="text-sm text-gray-400">
-              Install the Chrome extension and log in to activate this device.
-            </p>
-          </div>
+          <ActiveDevices />
 
           {/* Quick Actions Card */}
           <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex-1">
