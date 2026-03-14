@@ -1,37 +1,41 @@
 "use client";
 
 import { Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+const AUTH_MESSAGE_TYPE = "INSPECTMODE_PRO_AUTH_TOKEN";
+
+function sendTokenToExtension(token: string) {
+  window.postMessage({ type: AUTH_MESSAGE_TYPE, token }, window.location.origin);
+}
 
 function ExtensionRedirectInner() {
-  const searchParams = useSearchParams();
-  const returnTo = searchParams.get("returnTo");
-  const [status, setStatus] = useState<"loading" | "redirecting" | "error">("loading");
+  const [status, setStatus] = useState<"loading" | "done" | "error">("loading");
+  const tokenRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!returnTo?.startsWith("chrome-extension://")) {
-      setStatus("error");
-      return;
-    }
+    let retryId: ReturnType<typeof setTimeout>;
 
-    async function getTokenAndRedirect() {
+    async function run() {
       try {
         const res = await fetch("/api/auth/extension-token");
         const { token } = await res.json();
-        if (token) {
-          setStatus("redirecting");
-          window.location.href = `${returnTo}#token=${token}`;
-        } else {
+        if (!token) {
           setStatus("error");
+          return;
         }
+        tokenRef.current = token;
+        setStatus("done");
+        sendTokenToExtension(token);
+        retryId = setTimeout(() => sendTokenToExtension(token), 300);
       } catch {
         setStatus("error");
       }
     }
 
-    getTokenAndRedirect();
-  }, [returnTo]);
+    run();
+    return () => clearTimeout(retryId!);
+  }, []);
 
   return (
     <div className="text-center">
@@ -41,11 +45,21 @@ function ExtensionRedirectInner() {
           <p className="text-gray-600">Connecting to extension...</p>
         </>
       )}
-      {status === "redirecting" && (
-        <p className="text-gray-600">Redirecting back to InspectMode Pro...</p>
+      {status === "done" && (
+        <>
+          <p className="text-green-600 font-medium">You’re logged in.</p>
+          <p className="text-gray-600 mt-1">You can close this tab and use the extension.</p>
+          <button
+            type="button"
+            onClick={() => tokenRef.current && sendTokenToExtension(tokenRef.current)}
+            className="mt-4 text-sm text-blue-600 hover:underline"
+          >
+            Send to extension again
+          </button>
+        </>
       )}
       {status === "error" && (
-        <p className="text-red-500">Something went wrong. Please try logging in again from the extension.</p>
+        <p className="text-red-500">Something went wrong. Try logging in again from the extension.</p>
       )}
     </div>
   );

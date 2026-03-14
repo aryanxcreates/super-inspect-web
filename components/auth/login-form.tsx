@@ -19,13 +19,9 @@ export function LoginForm() {
   const redirect = searchParams.get("redirect") ?? "/dashboard";
 
   const redirectAfterLogin = async () => {
-    if (isExtension && returnTo) {
-      const res = await fetch("/api/auth/extension-token");
-      const { token } = await res.json();
-      if (token) {
-        window.location.href = `${returnTo}#token=${token}`;
-        return;
-      }
+    if (isExtension) {
+      window.location.href = `${window.location.origin}/login/extension-redirect`;
+      return;
     }
     router.push(redirect);
   };
@@ -54,8 +50,8 @@ export function LoginForm() {
     const supabase = createClient();
 
     const callbackParams = new URLSearchParams();
-    if (isExtension && returnTo) {
-      callbackParams.set("redirect", `/login/extension-redirect?returnTo=${encodeURIComponent(returnTo)}`);
+    if (isExtension) {
+      callbackParams.set("redirect", "/login/extension-redirect");
     } else {
       callbackParams.set("redirect", redirect);
     }
