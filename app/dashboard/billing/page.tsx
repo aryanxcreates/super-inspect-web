@@ -46,7 +46,7 @@ export default async function BillingPage() {
           </div>
           {hasCustomerId && (
             <Link
-              href="/api/portal"
+              href="/dashboard"
               className="px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
             >
               Manage subscription

@@ -67,9 +67,11 @@ async function fetchLicenseForCustomer(
   );
   const candidates = forCustomer.length > 0 ? forCustomer : allItems;
   const withKey = candidates.filter((item) => item.key != null);
-  const sorted = [...withKey].sort((a, b) =>
-    (b.created_at ?? "").localeCompare(a.created_at ?? "")
-  );
+  const sorted = [...withKey].sort((a, b) => {
+    const timeA = new Date(a.created_at ?? 0).getTime();
+    const timeB = new Date(b.created_at ?? 0).getTime();
+    return timeB - timeA;
+  });
   const best = sorted[0] ?? null;
 
   if (!best?.key) {
