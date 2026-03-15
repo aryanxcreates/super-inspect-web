@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { signToken } from "@/lib/jwt";
+import { handleCorsOptions, withCors } from "@/lib/cors";
+
+export function OPTIONS() {
+  return handleCorsOptions();
+}
 
 export async function GET() {
   try {
@@ -10,7 +15,9 @@ export async function GET() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return withCors(
+        NextResponse.json({ error: "Not authenticated" }, { status: 401 })
+      );
     }
 
     const token = await signToken({
@@ -18,8 +25,10 @@ export async function GET() {
       email: user.email ?? "",
     });
 
-    return NextResponse.json({ token });
+    return withCors(NextResponse.json({ token }));
   } catch {
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return withCors(
+      NextResponse.json({ error: "Server error" }, { status: 500 })
+    );
   }
 }

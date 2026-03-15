@@ -3,23 +3,32 @@ import { verifyToken } from "@/lib/jwt";
 import { prisma } from "@/lib/prisma";
 import { getAccessReason, hasAccess } from "@/lib/plans";
 import type { Plan } from "@/lib/plans";
+import { handleCorsOptions, withCors } from "@/lib/cors";
+
+export function OPTIONS() {
+  return handleCorsOptions();
+}
 
 export async function GET(request: NextRequest) {
   try {
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(
+      return withCors(
+        NextResponse.json(
         { hasAccess: false, reason: "none", error: "Missing token" },
-        { status: 401 }
+          { status: 401 }
+        )
       );
     }
 
     const token = authHeader.slice(7);
     const payload = await verifyToken(token);
     if (!payload) {
-      return NextResponse.json(
+      return withCors(
+        NextResponse.json(
         { hasAccess: false, reason: "none", error: "Invalid token" },
-        { status: 401 }
+          { status: 401 }
+        )
       );
     }
 
@@ -29,25 +38,29 @@ export async function GET(request: NextRequest) {
     });
 
     if (!profile) {
-      return NextResponse.json({ hasAccess: false, reason: "none" });
+      return withCors(NextResponse.json({ hasAccess: false, reason: "none" }));
     }
 
     const plan = profile.plan as Plan;
     const access = hasAccess(plan, profile.trialEndsAt);
     const reason = getAccessReason(plan, profile.trialEndsAt);
 
-    return NextResponse.json({
-      hasAccess: access,
-      reason,
-      plan,
-      email: profile.email,
-      trialEndsAt: profile.trialEndsAt?.toISOString() ?? null,
-      licenseKey: profile.licenseKey ?? null,
-    });
+    return withCors(
+      NextResponse.json({
+        hasAccess: access,
+        reason,
+        plan,
+        email: profile.email,
+        trialEndsAt: profile.trialEndsAt?.toISOString() ?? null,
+        licenseKey: profile.licenseKey ?? null,
+      })
+    );
   } catch {
-    return NextResponse.json(
-      { hasAccess: false, reason: "none", error: "Server error" },
-      { status: 500 }
+    return withCors(
+      NextResponse.json(
+        { hasAccess: false, reason: "none", error: "Server error" },
+        { status: 500 }
+      )
     );
   }
 }
