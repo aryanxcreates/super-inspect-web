@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 
-const allowedOrigin =
-  process.env.NODE_ENV === "production"
-    ? "https://inspectmode.xyz"      // your real domain
-    : "http://localhost:3000";       // dev app
+// const allowedOrigin =
+//   process.env.NODE_ENV === "production"
+//     ? "https://inspectmode.xyz"      // your real domain
+//     : "http://localhost:3000";       // dev app
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": allowedOrigin,
+  "Access-Control-Allow-Origin": '*',
   "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
