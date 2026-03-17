@@ -2,7 +2,6 @@
 
 import { Suspense } from "react";
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
 
 const AUTH_MESSAGE_TYPE = "INSPECTMODE_PRO_AUTH_TOKEN";
 
@@ -13,12 +12,11 @@ function sendTokenToExtension(token: string) {
 function ExtensionRedirectInner() {
   const [status, setStatus] = useState<"loading" | "done" | "error">("loading");
   const tokenRef = useRef<string | null>(null);
-  const [extensionHref, setExtensionHref] = useState<string | null>(null);
-  const searchParams = useSearchParams();
-  const returnTo = searchParams.get("returnTo");
 
   useEffect(() => {
-    let retryId: ReturnType<typeof setTimeout>;
+    let retryId: ReturnType<typeof setTimeout> | undefined;
+    let retry2Id: ReturnType<typeof setTimeout> | undefined;
+    let retry3Id: ReturnType<typeof setTimeout> | undefined;
 
     async function run() {
       try {
@@ -31,28 +29,22 @@ function ExtensionRedirectInner() {
         tokenRef.current = token;
         setStatus("done");
         sendTokenToExtension(token);
+        // Some extensions/pages load content scripts a moment later; retry a few times.
         retryId = setTimeout(() => sendTokenToExtension(token), 300);
-
-        if (returnTo?.startsWith("chrome-extension://")) {
-          const url = new URL(returnTo);
-          url.hash = `token=${encodeURIComponent(token)}`;
-          const href = url.toString();
-          setExtensionHref(href);
-          // Auto-redirect is sometimes blocked by the browser; keep a user-click fallback too.
-          try {
-            window.location.replace(href);
-          } catch {
-            // ignore
-          }
-        }
+        retry2Id = setTimeout(() => sendTokenToExtension(token), 1200);
+        retry3Id = setTimeout(() => sendTokenToExtension(token), 2500);
       } catch {
         setStatus("error");
       }
     }
 
     run();
-    return () => clearTimeout(retryId!);
-  }, [returnTo]);
+    return () => {
+      if (retryId) clearTimeout(retryId);
+      if (retry2Id) clearTimeout(retry2Id);
+      if (retry3Id) clearTimeout(retry3Id);
+    };
+  }, []);
 
   return (
     <div className="text-center">
@@ -66,18 +58,10 @@ function ExtensionRedirectInner() {
         <>
           <p className="text-green-600 font-medium">You’re logged in.</p>
           <p className="text-gray-600 mt-1">You can close this tab and use the extension.</p>
-          {extensionHref && (
-            <a
-              href={extensionHref}
-              className="inline-flex items-center justify-center mt-4 px-4 py-2 rounded-full bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
-            >
-              Continue to extension
-            </a>
-          )}
           <button
             type="button"
             onClick={() => tokenRef.current && sendTokenToExtension(tokenRef.current)}
-            className="mt-3 text-sm text-blue-600 hover:underline"
+            className="mt-4 text-sm text-blue-600 hover:underline"
           >
             Send to extension again
           </button>
