@@ -14,21 +14,21 @@ export default function PrivacyPage() {
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Privacy Policy</h1>
       
       <div className="prose prose-gray max-w-none">
-        <p className="text-gray-600 mb-6">Last updated: {new Date().toLocaleDateString()}</p>
+        <p className="text-gray-600 mb-6">Last updated: March 18, 2026</p>
         
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">1. Introduction</h2>
         <p className="text-gray-600 mb-4">
           Welcome to InspectMode Pro ("we," "our," or "us"). We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our website and tell you about your privacy rights and how the law protects you.
         </p>
 
-        <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. Data We Collect</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. Data we collect</h2>
         <p className="text-gray-600 mb-4">
-          We may collect, use, store and transfer different kinds of personal data about you which we have grouped together follows:
+          Below we explain the main types of information we collect when you use the InspectMode Pro website and Chrome extension.
         </p>
         <ul className="list-disc pl-6 mb-4 text-gray-600 space-y-2">
           <li><strong>Identity Data</strong> includes first name, last name, username or similar identifier.</li>
           <li><strong>Contact Data</strong> includes email address and telephone number.</li>
-          <li><strong>Technical Data</strong> includes internet protocol (IP) address, your login data, browser type and version, time zone setting and location, browser plug-in types and versions, operating system and platform and other technology on the devices you use to access this website.</li>
+          <li><strong>Technical Data</strong> includes internet protocol (IP) address, your login data, browser type and version, time zone setting, browser plug-in types and versions, operating system and platform and other technology on the devices you use to access this website.</li>
           <li><strong>Usage Data</strong> includes information about how you use our website, products and services.</li>
         </ul>
 
