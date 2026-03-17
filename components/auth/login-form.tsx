@@ -20,7 +20,9 @@ export function LoginForm() {
 
   const redirectAfterLogin = async () => {
     if (isExtension) {
-      window.location.href = `${window.location.origin}/login/extension-redirect`;
+      const url = new URL(`${window.location.origin}/login/extension-redirect`);
+      if (returnTo) url.searchParams.set("returnTo", returnTo);
+      window.location.href = url.toString();
       return;
     }
     router.push(redirect);
@@ -51,7 +53,12 @@ export function LoginForm() {
 
     const callbackParams = new URLSearchParams();
     if (isExtension) {
-      callbackParams.set("redirect", "/login/extension-redirect");
+      callbackParams.set(
+        "redirect",
+        returnTo
+          ? `/login/extension-redirect?returnTo=${encodeURIComponent(returnTo)}`
+          : "/login/extension-redirect"
+      );
     } else {
       callbackParams.set("redirect", redirect);
     }
