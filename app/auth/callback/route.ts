@@ -39,13 +39,10 @@ export async function GET(request: Request) {
     },
   });
 
-  // Extension callback: return an access token to the extension instead of redirecting to web UI
+  // Extension callback: DO NOT redirect to chrome-extension:// (often blocked as chrome-extension://invalid).
+  // Instead, redirect to a web page that posts the token to the extension.
   if (redirect.startsWith("chrome-extension://")) {
-    const token = await signToken({
-      userId: user.id,
-      email: user.email ?? "",
-    });
-    return NextResponse.redirect(`${redirect}#token=${token}`);
+    return NextResponse.redirect(`${origin}/login/extension-redirect`);
   }
 
   return NextResponse.redirect(`${origin}${redirect}`);
