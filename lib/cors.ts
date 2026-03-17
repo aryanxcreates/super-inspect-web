@@ -6,9 +6,11 @@ import { NextResponse } from "next/server";
 //     : "http://localhost:3000";       // dev app
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": '*',
+  "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Headers": "*",
+  // Let the browser cache the preflight response for a bit.
+  "Access-Control-Max-Age": "600",
 };
 
 export function withCors<T extends NextResponse>(response: T): T {
