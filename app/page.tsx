@@ -2,7 +2,9 @@ import { redirect } from "next/navigation";
 import { Navbar } from "@/components/landing/navbar";
 import { Hero } from "@/components/landing/hero";
 import { Features } from "@/components/landing/features";
+import { Testimonials } from "@/components/landing/testimonials";
 import { Pricing } from "@/components/landing/pricing";
+import { FAQ } from "@/components/landing/faq";
 import { Footer } from "@/components/landing/footer";
 
 type SearchParams = Promise<{ code?: string; redirect?: string }>;
@@ -15,11 +17,13 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
     redirect(`/auth/callback?${q.toString()}`);
   }
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-x-hidden">
       <Navbar />
       <Hero />
       <Features />
+      <Testimonials />
       <Pricing />
+      <FAQ />
       <Footer />
     </div>
   );
