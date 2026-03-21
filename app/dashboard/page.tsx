@@ -17,7 +17,14 @@ import Link from "next/link";
 
 export const metadata = { title: "Dashboard — InspectMode Pro" };
 
-export default async function DashboardPage() {
+type DashboardSearchParams = Promise<{ passwordUpdated?: string }>;
+
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: DashboardSearchParams;
+}) {
+  const { passwordUpdated } = await searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -45,6 +52,12 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
+      {passwordUpdated === "1" && (
+        <div className="rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-900">
+          Your password was updated successfully.
+        </div>
+      )}
+
       {/* Welcome Section */}
       <div className="space-y-2">
         <h1 className="text-3xl font-bold text-gray-900 tracking-tight">

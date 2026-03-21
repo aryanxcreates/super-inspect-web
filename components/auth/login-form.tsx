@@ -4,10 +4,14 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
+import { GoogleIcon } from "@/components/auth/google-icon";
+import { PasswordRequirements } from "@/components/auth/password-requirements";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -17,6 +21,14 @@ export function LoginForm() {
   const returnTo = searchParams.get("returnTo");
   const isExtension = source === "extension" && returnTo?.startsWith("chrome-extension://");
   const redirect = searchParams.get("redirect") ?? "/dashboard";
+
+  const urlError = searchParams.get("error");
+  const urlErrorMessage =
+    urlError === "session"
+      ? "Your reset link expired or the session is invalid. Request a new password reset link below."
+      : urlError === "auth" || urlError === "verification"
+        ? "Something went wrong signing you in. Please try again."
+        : null;
 
   const redirectAfterLogin = async () => {
     if (isExtension) {
@@ -72,13 +84,15 @@ export function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-sm">
+    <div className="w-full max-w-[min(100%,24rem)]">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
-        <p className="text-sm text-gray-500 mt-1">Log in to InspectMode Pro</p>
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
+          Welcome back
+        </h1>
+        <p className="text-sm text-gray-500 mt-2">Log in to InspectMode Pro</p>
         {isExtension && (
-          <p className="text-xs text-blue-600 mt-2 bg-blue-50 px-3 py-1.5 rounded-lg inline-block">
-            You'll be redirected back to the extension after login
+          <p className="text-xs text-blue-600 mt-3 bg-blue-50 px-3 py-1.5 rounded-lg inline-block max-w-full">
+            You&apos;ll be redirected back to the extension after login
           </p>
         )}
       </div>
@@ -87,51 +101,107 @@ export function LoginForm() {
         <button
           type="button"
           onClick={() => handleOAuth("google")}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+          className="group w-full flex items-center justify-center gap-3 min-h-10 px-3 rounded border border-[#dadce0] bg-white text-sm font-medium text-[#3c4043] shadow-[0_1px_2px_0_rgba(60,64,67,0.3),0_1px_3px_1px_rgba(60,64,67,0.15)] transition-shadow hover:shadow-[0_1px_2px_0_rgba(60,64,67,0.3),0_2px_6px_2px_rgba(60,64,67,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:ring-offset-2 cursor-pointer"
         >
-          Google
+          <GoogleIcon className="h-[18px] w-[18px] shrink-0" />
+          <span className="font-sans">Sign in with Google</span>
         </button>
       </div>
 
       <div className="flex items-center gap-3 mb-6">
         <div className="flex-1 h-px bg-gray-200" />
-        <span className="text-xs text-zinc-500">or</span>
+        <span className="text-xs text-zinc-500 font-medium">or</span>
         <div className="flex-1 h-px bg-gray-200" />
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-900 placeholder:text-zinc-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-900 placeholder:text-zinc-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-        />
+      {urlErrorMessage && (
+        <p className="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-2">
+          {urlErrorMessage}
+        </p>
+      )}
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div>
+          <label htmlFor="login-email" className="sr-only">
+            Email
+          </label>
+          <input
+            id="login-email"
+            type="email"
+            autoComplete="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-zinc-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="login-password" className="sr-only">
+            Password
+          </label>
+          <div className="relative">
+            <input
+              id="login-password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={8}
+              className="w-full pl-4 pr-12 py-3 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-zinc-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
+
+          <PasswordRequirements password={password} />
+        </div>
+
+        <div className="flex justify-end">
+          <Link
+            href={
+              isExtension
+                ? `/forgot-password?source=extension&returnTo=${encodeURIComponent(returnTo!)}`
+                : "/forgot-password"
+            }
+            className="text-sm font-medium text-blue-600 hover:text-blue-700"
+          >
+            Forgot password?
+          </Link>
+        </div>
+
+        {error && (
+          <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+            {error}
+          </p>
+        )}
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full px-4 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors cursor-pointer"
+          className="w-full px-4 py-3 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors cursor-pointer shadow-sm shadow-blue-600/20"
         >
           {loading ? "Logging in..." : "Log in"}
         </button>
       </form>
 
-      <p className="text-center text-sm text-gray-500 mt-6">
+      <p className="text-center text-sm text-gray-500 mt-8">
         Don&apos;t have an account?{" "}
         <Link
-          href={isExtension ? `/signup?source=extension&returnTo=${encodeURIComponent(returnTo!)}` : "/signup"}
+          href={
+            isExtension
+              ? `/signup?source=extension&returnTo=${encodeURIComponent(returnTo!)}`
+              : "/signup"
+          }
           className="text-blue-600 hover:text-blue-700 font-medium"
         >
           Sign up

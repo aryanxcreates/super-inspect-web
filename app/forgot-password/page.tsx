@@ -1,14 +1,14 @@
 import { Suspense } from "react";
-import { LoginForm } from "@/components/auth/login-form";
+import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
 
-export const metadata = { title: "Log In — InspectMode Pro" };
+export const metadata = { title: "Reset password — InspectMode Pro" };
 
-export default function LoginPage() {
+export default function ForgotPasswordPage() {
   return (
     <main className="min-h-dvh flex items-center justify-center bg-linear-to-b from-gray-50 to-gray-100/80 px-4 py-10 sm:py-12">
       <div className="w-full max-w-md rounded-2xl border border-gray-200/80 bg-white p-6 sm:p-8 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)]">
-        <Suspense fallback={<div className="h-64 animate-pulse rounded-lg bg-gray-100" />}>
-          <LoginForm />
+        <Suspense fallback={<div className="h-48 animate-pulse rounded-lg bg-gray-100" />}>
+          <ForgotPasswordForm />
         </Suspense>
       </div>
     </main>
