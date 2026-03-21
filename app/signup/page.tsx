@@ -5,10 +5,12 @@ export const metadata = { title: "Sign Up — InspectMode Pro" };
 
 export default function SignupPage() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <Suspense fallback={null}>
-        <SignupForm />
-      </Suspense>
+    <main className="min-h-dvh flex items-center justify-center bg-linear-to-b from-gray-50 to-gray-100/80 px-4 py-10 sm:py-12">
+      <div className="w-full max-w-md rounded-2xl border border-gray-200/80 bg-white p-6 sm:p-8 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)]">
+        <Suspense fallback={<div className="h-64 animate-pulse rounded-lg bg-gray-100" />}>
+          <SignupForm />
+        </Suspense>
+      </div>
     </main>
   );
 }
