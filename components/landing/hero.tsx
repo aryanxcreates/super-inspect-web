@@ -12,8 +12,14 @@ export function Hero() {
       {/* Animated mesh gradient background */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-linear-to-br from-blue-100/60 via-white to-blue-50/40 rounded-full blur-[100px] animate-pulse-soft" />
-        <div className="absolute top-20 right-1/4 w-[400px] h-[400px] bg-blue-200/20 rounded-full blur-[80px] animate-pulse-soft" style={{ animationDelay: "2s" }} />
-        <div className="absolute -top-10 left-1/4 w-[300px] h-[300px] bg-indigo-100/30 rounded-full blur-[60px] animate-pulse-soft" style={{ animationDelay: "1s" }} />
+        <div
+          className="absolute top-20 right-1/4 w-[400px] h-[400px] bg-blue-200/20 rounded-full blur-[80px] animate-pulse-soft"
+          style={{ animationDelay: "2s" }}
+        />
+        <div
+          className="absolute -top-10 left-1/4 w-[300px] h-[300px] bg-indigo-100/30 rounded-full blur-[60px] animate-pulse-soft"
+          style={{ animationDelay: "1s" }}
+        />
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
@@ -84,14 +90,19 @@ export function Hero() {
           transition={{ delay: 0.7, duration: 0.5 }}
           className="mt-4 text-xs text-gray-400"
         >
-          Free 7-day trial &middot; No credit card required
+          Free 3-day trial &middot; No credit card required
         </motion.p>
 
         {/* Browser mockup */}
         <motion.div
           initial={{ opacity: 0, y: 60, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ type: "spring", stiffness: 200, damping: 25, delay: 0.6 }}
+          transition={{
+            type: "spring",
+            stiffness: 200,
+            damping: 25,
+            delay: 0.6,
+          }}
           className="mt-12 sm:mt-16 max-w-4xl mx-auto w-full min-w-0"
         >
           <div className="animate-float">

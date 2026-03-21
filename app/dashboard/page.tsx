@@ -26,23 +26,42 @@ export default async function DashboardPage({
 }) {
   const { passwordUpdated } = await searchParams;
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const profile = await prisma.profile.findUnique({
     where: { id: user!.id },
-    select: { plan: true, licenseKey: true, trialEndsAt: true, createdAt: true, email: true },
+    select: {
+      plan: true,
+      licenseKey: true,
+      trialEndsAt: true,
+      createdAt: true,
+      email: true,
+    },
   });
 
   const plan = (profile?.plan ?? "free") as Plan;
   const licenseKey = profile?.licenseKey ?? null;
   const trialEndsAt = profile?.trialEndsAt;
-  const memberSince = profile?.createdAt 
-    ? new Date(profile.createdAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
+  const memberSince = profile?.createdAt
+    ? new Date(profile.createdAt).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
     : "Unknown";
 
-  const isTrialExpired = plan === "trial" && trialEndsAt && new Date(trialEndsAt) < new Date();
+  const isTrialExpired =
+    plan === "trial" && trialEndsAt && new Date(trialEndsAt) < new Date();
   const trialDaysLeft = trialEndsAt
-    ? Math.max(0, Math.ceil((new Date(trialEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    ? Math.max(
+        0,
+        Math.ceil(
+          (new Date(trialEndsAt).getTime() - Date.now()) /
+            (1000 * 60 * 60 * 24),
+        ),
+      )
     : 0;
 
   const needsTrial = plan === "free";
@@ -61,7 +80,7 @@ export default async function DashboardPage({
       {/* Welcome Section */}
       <div className="space-y-2">
         <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
-          Welcome, {user?.email?.split('@')[0]}!
+          Welcome, {user?.email?.split("@")[0]}!
         </h1>
         <p className="text-gray-500 text-lg">
           Manage your InspectMode Pro license and devices
@@ -76,9 +95,12 @@ export default async function DashboardPage({
               <Sparkles size={24} />
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-bold mb-1">Start your free 7-day trial</h2>
+              <h2 className="text-xl font-bold mb-1">
+                Start your free 3-day trial
+              </h2>
               <p className="text-blue-100 text-sm mb-5 max-w-md">
-                Get full access to all InspectMode Pro features for 7 days. No credit card required.
+                Get full access to all InspectMode Pro features for 7 days. No
+                credit card required.
               </p>
               <Link
                 href={`/api/checkout?products=${trialProductId}&customerEmail=${user!.email}`}
@@ -98,9 +120,12 @@ export default async function DashboardPage({
             <Clock size={20} className="text-amber-600" />
             <div className="flex-1">
               <p className="text-sm font-semibold text-amber-900">
-                Your trial ends in {trialDaysLeft} day{trialDaysLeft !== 1 ? "s" : ""}
+                Your trial ends in {trialDaysLeft} day
+                {trialDaysLeft !== 1 ? "s" : ""}
               </p>
-              <p className="text-xs text-amber-700 mt-0.5">Upgrade to keep using InspectMode Pro</p>
+              <p className="text-xs text-amber-700 mt-0.5">
+                Upgrade to keep using InspectMode Pro
+              </p>
             </div>
             <Link
               href="/dashboard/billing"
@@ -117,8 +142,12 @@ export default async function DashboardPage({
           <div className="flex items-center gap-3">
             <Clock size={20} className="text-red-600" />
             <div className="flex-1">
-              <p className="text-sm font-semibold text-red-900">Your trial has ended</p>
-              <p className="text-xs text-red-700 mt-0.5">Upgrade to Pro or Lifetime to continue using InspectMode Pro</p>
+              <p className="text-sm font-semibold text-red-900">
+                Your trial has ended
+              </p>
+              <p className="text-xs text-red-700 mt-0.5">
+                Upgrade to Pro or Lifetime to continue using InspectMode Pro
+              </p>
             </div>
             <Link
               href="/dashboard/billing"
@@ -138,7 +167,9 @@ export default async function DashboardPage({
               <Crown size={24} />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-blue-600 text-sm font-medium mb-0.5">One-time purchase</p>
+              <p className="text-blue-600 text-sm font-medium mb-0.5">
+                One-time purchase
+              </p>
               <h2 className="text-xl font-bold text-gray-900 mb-1">
                 Upgrade to lifetime access
               </h2>
@@ -166,14 +197,20 @@ export default async function DashboardPage({
               <ShieldCheck size={24} />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">License Details</h2>
-              <p className="text-gray-500 text-sm">Your InspectMode Pro license information</p>
+              <h2 className="text-lg font-bold text-gray-900">
+                License Details
+              </h2>
+              <p className="text-gray-500 text-sm">
+                Your InspectMode Pro license information
+              </p>
             </div>
           </div>
 
           <div className="space-y-6 flex-1">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-gray-500">License Key</label>
+              <label className="text-sm font-medium text-gray-500">
+                License Key
+              </label>
               <div className="flex items-center gap-2">
                 <code className="flex-1 bg-gray-50 px-4 py-3 rounded-lg text-sm font-mono text-gray-900 border border-gray-200">
                   {licenseKey ?? "No active license"}
@@ -181,27 +218,38 @@ export default async function DashboardPage({
                 {licenseKey && <CopyButton value={licenseKey} />}
               </div>
               {!licenseKey && needsTrial && (
-                <p className="text-xs text-gray-400">Start your free trial to get a license key</p>
+                <p className="text-xs text-gray-400">
+                  Start your free trial to get a license key
+                </p>
               )}
             </div>
 
             <div className="flex items-center justify-between py-2 border-b border-gray-50">
               <span className="text-sm font-medium text-gray-500">Plan</span>
-              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide ${
-                plan === "lifetime" ? "bg-emerald-100 text-emerald-800" :
-                plan === "subscription" ? "bg-blue-100 text-blue-800" :
-                plan === "trial" ? "bg-amber-100 text-amber-800" :
-                "bg-gray-100 text-gray-800"
-              }`}>
+              <span
+                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide ${
+                  plan === "lifetime"
+                    ? "bg-emerald-100 text-emerald-800"
+                    : plan === "subscription"
+                      ? "bg-blue-100 text-blue-800"
+                      : plan === "trial"
+                        ? "bg-amber-100 text-amber-800"
+                        : "bg-gray-100 text-gray-800"
+                }`}
+              >
                 {plan === "free" ? "No plan" : plan}
-                {plan === "trial" && !isTrialExpired && ` — ${trialDaysLeft}d left`}
+                {plan === "trial" &&
+                  !isTrialExpired &&
+                  ` — ${trialDaysLeft}d left`}
                 {isTrialExpired && " — expired"}
               </span>
             </div>
 
             <div className="flex items-center justify-between py-2 border-b border-gray-50">
               <span className="text-sm font-medium text-gray-500">Email</span>
-              <span className="text-sm font-medium text-gray-900">{user?.email}</span>
+              <span className="text-sm font-medium text-gray-900">
+                {user?.email}
+              </span>
             </div>
 
             <div className="flex items-center justify-between py-2 border-b border-gray-50">
@@ -210,15 +258,18 @@ export default async function DashboardPage({
             </div>
 
             <div className="flex items-center justify-between py-2">
-              <span className="text-sm font-medium text-gray-500">Member Since</span>
-              <span className="text-sm font-medium text-gray-900">{memberSince}</span>
+              <span className="text-sm font-medium text-gray-500">
+                Member Since
+              </span>
+              <span className="text-sm font-medium text-gray-900">
+                {memberSince}
+              </span>
             </div>
           </div>
         </div>
 
         {/* Quick Actions & Devices Column */}
         <div className="flex flex-col gap-8">
-          
           {/* Active Devices Card */}
           <ActiveDevices />
 
@@ -229,53 +280,81 @@ export default async function DashboardPage({
                 <Zap size={24} />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-gray-900">Quick Actions</h2>
-                <p className="text-gray-500 text-sm">Get started with InspectMode Pro</p>
+                <h2 className="text-lg font-bold text-gray-900">
+                  Quick Actions
+                </h2>
+                <p className="text-gray-500 text-sm">
+                  Get started with InspectMode Pro
+                </p>
               </div>
             </div>
 
             <div className="space-y-3">
-              <a href="#" className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group">
+              <a
+                href="#"
+                className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group"
+              >
                 <div className="flex items-center gap-4">
                   <div className="p-2 bg-amber-100 text-amber-600 rounded-lg group-hover:bg-amber-200 transition-colors">
                     <Download size={18} />
                   </div>
                   <div className="text-left">
-                    <p className="text-sm font-bold text-gray-900">Install Extension</p>
-                    <p className="text-xs text-gray-500">Add to Chrome browser</p>
+                    <p className="text-sm font-bold text-gray-900">
+                      Install Extension
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Add to Chrome browser
+                    </p>
                   </div>
                 </div>
-                <div className="text-gray-400 group-hover:translate-x-1 transition-transform">→</div>
+                <div className="text-gray-400 group-hover:translate-x-1 transition-transform">
+                  →
+                </div>
               </a>
 
-              <a href="#" className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group">
+              <a
+                href="#"
+                className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group"
+              >
                 <div className="flex items-center gap-4">
                   <div className="p-2 bg-blue-100 text-blue-600 rounded-lg group-hover:bg-blue-200 transition-colors">
                     <BookOpen size={18} />
                   </div>
                   <div className="text-left">
-                    <p className="text-sm font-bold text-gray-900">Documentation</p>
-                    <p className="text-xs text-gray-500">Learn how to use all tools</p>
+                    <p className="text-sm font-bold text-gray-900">
+                      Documentation
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Learn how to use all tools
+                    </p>
                   </div>
                 </div>
-                <div className="text-gray-400 group-hover:translate-x-1 transition-transform">→</div>
+                <div className="text-gray-400 group-hover:translate-x-1 transition-transform">
+                  →
+                </div>
               </a>
 
-              <a href="mailto:contact@inspectmode.xyz" className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group">
+              <a
+                href="mailto:contact@inspectmode.xyz"
+                className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group"
+              >
                 <div className="flex items-center gap-4">
                   <div className="p-2 bg-green-100 text-green-600 rounded-lg group-hover:bg-green-200 transition-colors">
                     <HelpCircle size={18} />
                   </div>
                   <div className="text-left">
-                    <p className="text-sm font-bold text-gray-900">Get Support</p>
+                    <p className="text-sm font-bold text-gray-900">
+                      Get Support
+                    </p>
                     <p className="text-xs text-gray-500">Contact our team</p>
                   </div>
                 </div>
-                <div className="text-gray-400 group-hover:translate-x-1 transition-transform">→</div>
+                <div className="text-gray-400 group-hover:translate-x-1 transition-transform">
+                  →
+                </div>
               </a>
             </div>
           </div>
-
         </div>
       </div>
     </div>

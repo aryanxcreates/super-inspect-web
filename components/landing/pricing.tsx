@@ -87,7 +87,7 @@ export function Pricing() {
             Simple, transparent pricing
           </h2>
           <p className="mt-5 text-gray-500 max-w-lg mx-auto text-base sm:text-lg px-1">
-            Start with a free 7-day trial. Upgrade when you&apos;re ready.
+            Start with a free 3-day trial. Upgrade when you&apos;re ready.
           </p>
         </motion.div>
 

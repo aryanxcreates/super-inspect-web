@@ -15,7 +15,8 @@ export function SignupForm() {
 
   const source = searchParams.get("source");
   const returnTo = searchParams.get("returnTo");
-  const isExtension = source === "extension" && returnTo?.startsWith("chrome-extension://");
+  const isExtension =
+    source === "extension" && returnTo?.startsWith("chrome-extension://");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +49,10 @@ export function SignupForm() {
 
     const callbackParams = new URLSearchParams();
     if (isExtension && returnTo) {
-      callbackParams.set("redirect", `/login/extension-redirect?returnTo=${encodeURIComponent(returnTo)}`);
+      callbackParams.set(
+        "redirect",
+        `/login/extension-redirect?returnTo=${encodeURIComponent(returnTo)}`,
+      );
     } else {
       callbackParams.set("redirect", "/dashboard");
     }
@@ -82,7 +86,7 @@ export function SignupForm() {
           Create your account
         </h1>
         <p className="text-sm text-gray-500 mt-1">
-          Start your free 7-day trial
+          Start your free 3-day trial
         </p>
         {isExtension && (
           <p className="text-xs text-blue-600 mt-2 bg-blue-50 px-3 py-1.5 rounded-lg inline-block">
@@ -140,7 +144,11 @@ export function SignupForm() {
       <p className="text-center text-sm text-gray-500 mt-6">
         Already have an account?{" "}
         <Link
-          href={isExtension ? `/login?source=extension&returnTo=${encodeURIComponent(returnTo!)}` : "/login"}
+          href={
+            isExtension
+              ? `/login?source=extension&returnTo=${encodeURIComponent(returnTo!)}`
+              : "/login"
+          }
           className="text-blue-600 hover:text-blue-700 font-medium"
         >
           Log in
