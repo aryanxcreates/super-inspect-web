@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { SquareMousePointer, Menu, X } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 const navLinks = [
   { href: "#features", label: "Features" },
@@ -12,9 +13,27 @@ const navLinks = [
   { href: "#faq", label: "FAQ" },
 ] as const;
 
-export function Navbar() {
+interface NavbarProps {
+  initialLoggedIn?: boolean;
+}
+
+export function Navbar({ initialLoggedIn = false }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(initialLoggedIn);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setLoggedIn(!!session?.user);
+    });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setLoggedIn(!!session?.user);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -71,18 +90,20 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-3">
+          {!loggedIn && (
+            <Link
+              href="/login"
+              className="hidden sm:inline-flex px-2.5 sm:px-4 py-2 text-sm text-gray-600 hover:text-gray-900 font-medium transition-colors"
+            >
+              Log in
+            </Link>
+          )}
           <Link
-            href="/login"
-            className="hidden sm:inline-flex px-2.5 sm:px-4 py-2 text-sm text-gray-600 hover:text-gray-900 font-medium transition-colors"
-          >
-            Log in
-          </Link>
-          <Link
-            href="/signup"
+            href={loggedIn ? "/dashboard" : "/signup"}
             className="px-3 sm:px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5 whitespace-nowrap"
             onClick={() => setMenuOpen(false)}
           >
-            Get started
+            {loggedIn ? "Dashboard" : "Get started"}
           </Link>
           <button
             type="button"
@@ -125,11 +146,11 @@ export function Navbar() {
                   </a>
                 ))}
                 <Link
-                  href="/login"
+                  href={loggedIn ? "/dashboard" : "/login"}
                   className="py-3 px-2 rounded-lg text-base font-medium text-gray-600 hover:bg-gray-50"
                   onClick={() => setMenuOpen(false)}
                 >
-                  Log in
+                  {loggedIn ? "Dashboard" : "Log in"}
                 </Link>
               </div>
             </motion.div>

@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 import { Navbar } from "@/components/landing/navbar";
 import { Hero } from "@/components/landing/hero";
 import { Features } from "@/components/landing/features";
@@ -16,9 +17,15 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
     if (params.redirect) q.set("redirect", params.redirect);
     redirect(`/auth/callback?${q.toString()}`);
   }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-      <Navbar />
+      <Navbar initialLoggedIn={!!user} />
       <Hero />
       <Features />
       <Testimonials />
