@@ -19,7 +19,7 @@ export const PLAN_INFO: Record<Plan, PlanInfo> = {
   trial: {
     name: "Free trial",
     price: "$0",
-    priceDetail: "Limited-time access (from Polar)",
+    priceDetail: "Limited-time access",
     features: [
       "All inspection tools",
       "Copy CSS properties",

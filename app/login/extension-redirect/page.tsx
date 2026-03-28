@@ -1,7 +1,8 @@
 "use client";
 
 import { Suspense } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const AUTH_MESSAGE_TYPE = "INSPECTMODE_PRO_AUTH_TOKEN";
 
@@ -10,8 +11,9 @@ function sendTokenToExtension(token: string) {
 }
 
 function ExtensionRedirectInner() {
+  const router = useRouter();
   const [status, setStatus] = useState<"loading" | "done" | "error">("loading");
-  const tokenRef = useRef<string | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState(5);
 
   useEffect(() => {
     let retryId: ReturnType<typeof setTimeout> | undefined;
@@ -26,7 +28,6 @@ function ExtensionRedirectInner() {
           setStatus("error");
           return;
         }
-        tokenRef.current = token;
         setStatus("done");
         sendTokenToExtension(token);
         // Some extensions/pages load content scripts a moment later; retry a few times.
@@ -46,6 +47,24 @@ function ExtensionRedirectInner() {
     };
   }, []);
 
+  useEffect(() => {
+    if (status !== "done") return;
+
+    setSecondsLeft(5);
+    const id = setInterval(() => {
+      setSecondsLeft((s) => {
+        if (s <= 1) {
+          clearInterval(id);
+          router.push("/dashboard");
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(id);
+  }, [status, router]);
+
   return (
     <div className="text-center">
       {status === "loading" && (
@@ -58,13 +77,10 @@ function ExtensionRedirectInner() {
         <>
           <p className="text-green-600 font-medium">You’re logged in.</p>
           <p className="text-gray-600 mt-1">You can close this tab and use the extension.</p>
-          <button
-            type="button"
-            onClick={() => tokenRef.current && sendTokenToExtension(tokenRef.current)}
-            className="mt-4 text-sm text-blue-600 hover:underline"
-          >
-            Send to extension again
-          </button>
+          <p className="text-gray-600 mt-3">
+            Redirecting to dashboard in <span className="font-medium tabular-nums">{secondsLeft}</span>{" "}
+            {secondsLeft === 1 ? "second" : "seconds"}…
+          </p>
         </>
       )}
       {status === "error" && (
