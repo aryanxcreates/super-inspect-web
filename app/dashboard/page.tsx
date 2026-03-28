@@ -20,14 +20,17 @@ export const metadata = { title: "Dashboard — InspectMode Pro" };
 const CHROME_WEB_STORE_URL =
   "https://chromewebstore.google.com/detail/inspectmode-pro/kfpdbhknbecdddfonddcogclcjkadija";
 
-type DashboardSearchParams = Promise<{ passwordUpdated?: string }>;
+type DashboardSearchParams = Promise<{
+  passwordUpdated?: string;
+  checkout?: string;
+}>;
 
 export default async function DashboardPage({
   searchParams,
 }: {
   searchParams: DashboardSearchParams;
 }) {
-  const { passwordUpdated } = await searchParams;
+  const { passwordUpdated, checkout } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -80,6 +83,17 @@ export default async function DashboardPage({
       {passwordUpdated === "1" && (
         <div className="rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-900">
           Your password was updated successfully.
+        </div>
+      )}
+
+      {checkout === "success" && (
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-950 shadow-sm">
+          <p className="font-semibold">Your plan is active</p>
+          <p className="mt-1.5 leading-relaxed text-emerald-900/90">
+            Checkout completed successfully. Open the InspectMode Pro extension
+            and sign in with your account to use your license. If you haven&apos;t
+            installed it yet, use the Chrome extension section below.
+          </p>
         </div>
       )}
 
