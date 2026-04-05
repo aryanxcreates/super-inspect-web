@@ -1,6 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  type SyntheticEvent,
+} from "react";
 import {
   CHROME_LOGO_ICON_URL,
   CHROME_WEB_STORE_URL,
@@ -8,9 +14,32 @@ import {
 
 const bouncy = { type: "spring", stiffness: 300, damping: 20 };
 
+const VSL_VIDEO_URL =
+  "https://yefkwpddzxauddxeujlr.supabase.co/storage/v1/object/public/media/vsl%20v3.mp4";
+
 export function Hero() {
+  const videoWrapRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoInView = useInView(videoWrapRef, { once: false, amount: 0.35 });
+
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    if (videoInView) {
+      el.play().catch(() => {});
+    } else {
+      el.pause();
+    }
+  }, [videoInView]);
+
+  const onVslEnded = useCallback((e: SyntheticEvent<HTMLVideoElement>) => {
+    const v = e.currentTarget;
+    v.currentTime = 0;
+    v.play().catch(() => {});
+  }, []);
+
   return (
-    <section className="relative overflow-hidden pt-28 pb-10 sm:pt-32 sm:pb-20 md:pt-44 md:pb-18">
+    <section className="relative overflow-hidden pt-28 pb-10 md:pt-34 md:pb-10">
       {/* Hero-only spotlight — page background handles grid + base wash */}
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
         <div className="absolute inset-0 bg-radial-[ellipse_95%_70%_at_50%_20%] from-blue-500/6 via-transparent to-transparent" />
@@ -58,7 +87,7 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ ...bouncy, delay: 0.5 }}
+          transition={{ ...bouncy, delay: 0.55 }}
           className="mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 w-full max-w-md sm:max-w-none mx-auto sm:mx-0 sm:w-auto"
         >
           <a
@@ -85,11 +114,37 @@ export function Hero() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.7, duration: 0.5 }}
+          transition={{ delay: 0.75, duration: 0.5 }}
           className="mt-4 text-xs text-gray-400"
         >
           Free 3-day trial &middot; No credit card required
         </motion.p>
+
+        {/* VSL */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...bouncy, delay: 0.42 }}
+          className="mt-10 sm:mt-12 w-full max-w-4xl mx-auto"
+        >
+          <div className="rounded-2xl shadow-[0_24px_70px_-18px_rgba(37,99,235,0.28),0_0_0_1px_rgba(15,23,42,0.04)]">
+            <div
+              ref={videoWrapRef}
+              className="overflow-hidden rounded-[calc(1rem-3px)] shadow-inner aspect-video relative"
+            >
+              <video
+                ref={videoRef}
+                className="absolute inset-0 h-full w-full object-cover"
+                src={VSL_VIDEO_URL}
+                muted
+                playsInline
+                preload="metadata"
+                aria-label="Super Inspect product overview video"
+                onEnded={onVslEnded}
+              />
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
