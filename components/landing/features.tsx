@@ -1,17 +1,29 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import { Download, Palette, Type, Code, Play } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { Download, Palette, Type, Code } from "lucide-react";
 
+const MEDIA_BASE =
+  "https://yefkwpddzxauddxeujlr.supabase.co/storage/v1/object/public/media";
+
+/** Order matches videos: 1 = CSS inspect, 2 = assets, 3 = colors, 4 = fonts */
 const features = [
+  {
+    icon: Code,
+    title: "Advanced CSS Inspector",
+    description:
+      "Hover any element to see CSS properties, spacing, dimensions, and typography in a beautiful HUD overlay. Copy any property instantly.",
+    color: "blue",
+    videoSrc: `${MEDIA_BASE}/1.mp4`,
+  },
   {
     icon: Download,
     title: "One-Click Asset Downloader",
     description:
       "Find every image, SVG, video, and background asset on the page. Preview, copy, and download in one click — no more digging through DevTools.",
     color: "emerald",
-    videoLabel: "Asset extraction demo",
+    videoSrc: `${MEDIA_BASE}/2.mp4`,
   },
   {
     icon: Palette,
@@ -19,7 +31,7 @@ const features = [
     description:
       "Extract every color used on the page. Switch between HEX, RGB, and HSL with a click. Pick any color with the built-in eyedropper.",
     color: "violet",
-    videoLabel: "Color picker demo",
+    videoSrc: `${MEDIA_BASE}/3.mp4`,
   },
   {
     icon: Type,
@@ -27,15 +39,7 @@ const features = [
     description:
       "See all fonts, weights, and sizes used on the page with live previews. Copy font names and full CSS stacks instantly.",
     color: "amber",
-    videoLabel: "Font analyzer demo",
-  },
-  {
-    icon: Code,
-    title: "Advanced CSS Inspector",
-    description:
-      "Hover any element to see CSS properties, spacing, dimensions, and typography in a beautiful HUD overlay. Copy any property instantly.",
-    color: "blue",
-    videoLabel: "CSS inspector demo",
+    videoSrc: `${MEDIA_BASE}/4.mp4`,
   },
 ];
 
@@ -54,9 +58,22 @@ function FeatureRow({
   index: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const videoWrapRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const videoInView = useInView(videoWrapRef, { once: false, amount: 0.35 });
   const isReversed = index % 2 !== 0;
   const colors = colorMap[feature.color];
+
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    if (videoInView) {
+      el.play().catch(() => {});
+    } else {
+      el.pause();
+    }
+  }, [videoInView]);
 
   return (
     <motion.div
@@ -93,23 +110,20 @@ function FeatureRow({
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
           className={`relative rounded-2xl border border-gray-100 bg-linear-to-br ${colors.gradient} overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300`}
         >
-          <div className="aspect-video flex items-center justify-center relative">
-            <div className="absolute inset-0 bg-linear-to-br from-white/40 to-transparent" />
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative z-10 w-16 h-16 rounded-full bg-white shadow-lg shadow-gray-200/60 flex items-center justify-center group"
-            >
-              <Play
-                size={24}
-                className="text-gray-700 ml-1 group-hover:text-blue-600 transition-colors"
-              />
-            </motion.button>
-          </div>
-          <div className="px-4 py-3 border-t border-gray-100/80 bg-white/60 backdrop-blur-sm">
-            <p className="text-xs text-gray-400 text-center font-medium">
-              {feature.videoLabel}
-            </p>
+          <div
+            ref={videoWrapRef}
+            className="aspect-video relative bg-gray-900/5"
+          >
+            <video
+              ref={videoRef}
+              className="absolute inset-0 h-full w-full object-cover"
+              src={feature.videoSrc}
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label={feature.title}
+            />
           </div>
         </motion.div>
       </div>

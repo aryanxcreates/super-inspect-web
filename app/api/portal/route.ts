@@ -19,5 +19,5 @@ export const GET = CustomerPortal({
 
     return profile?.polarCustomerId ?? "";
   },
-  server: "sandbox",
+  server: (process.env.POLAR_SERVER as "sandbox" | "production") ?? "sandbox",
 });

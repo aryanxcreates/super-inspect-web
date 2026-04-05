@@ -108,8 +108,6 @@ export default async function BillingPage() {
             {hasCustomerId && (
               <a
                 href="/api/portal"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-50"
               >
                 Customer portal
