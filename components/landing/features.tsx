@@ -136,7 +136,10 @@ export function Features() {
   const headerInView = useInView(headerRef, { once: true, margin: "-60px" });
 
   return (
-    <section id="features" className="py-16 sm:py-24 md:py-32 bg-white">
+    <section
+      id="features"
+      className="py-16 sm:py-24 md:py-32 bg-transparent"
+    >
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <motion.div
           ref={headerRef}

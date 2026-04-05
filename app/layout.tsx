@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "InspectMode Pro — Your Design Toolkit for the Web",
@@ -12,8 +16,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased`} suppressHydrationWarning>
+    <html lang="en" className={plusJakarta.variable} suppressHydrationWarning>
+      <body className="antialiased" suppressHydrationWarning>
         {children}
       </body>
     </html>

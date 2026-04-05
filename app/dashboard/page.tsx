@@ -14,11 +14,9 @@ import {
 import { CopyButton } from "@/components/dashboard/copy-button";
 import { ActiveDevices } from "@/components/dashboard/active-devices";
 import Link from "next/link";
+import { CHROME_WEB_STORE_URL } from "@/lib/chrome-web-store";
 
 export const metadata = { title: "Dashboard — InspectMode Pro" };
-
-const CHROME_WEB_STORE_URL =
-  "https://chromewebstore.google.com/detail/inspectmode-pro/kfpdbhknbecdddfonddcogclcjkadija";
 
 type DashboardSearchParams = Promise<{
   passwordUpdated?: string;

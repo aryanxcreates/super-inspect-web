@@ -71,7 +71,7 @@ export function Pricing() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="pricing" className="py-16 sm:py-24 md:py-32 bg-white">
+    <section id="pricing" className="py-16 sm:py-24 md:py-32 bg-transparent">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <motion.div
           ref={ref}

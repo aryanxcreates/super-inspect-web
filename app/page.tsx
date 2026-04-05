@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { LandingBackground } from "@/components/landing/landing-background";
 import { Navbar } from "@/components/landing/navbar";
 import { Hero } from "@/components/landing/hero";
 import { Features } from "@/components/landing/features";
@@ -24,14 +25,17 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
   } = await supabase.auth.getUser();
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
-      <Navbar initialLoggedIn={!!user} />
-      <Hero />
-      <Features />
-      <Testimonials />
-      <Pricing />
-      <FAQ />
-      <Footer />
+    <div className="relative isolate min-h-screen overflow-x-hidden">
+      <LandingBackground />
+      <div className="relative z-10">
+        <Navbar initialLoggedIn={!!user} />
+        <Hero />
+        <Features />
+        <Testimonials />
+        <Pricing />
+        <FAQ />
+        <Footer />
+      </div>
     </div>
   );
 }

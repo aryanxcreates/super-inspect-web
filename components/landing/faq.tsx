@@ -34,7 +34,7 @@ export function FAQ() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="faq" className="py-16 sm:py-24 md:py-32 bg-slate-50">
+    <section id="faq" className="py-16 sm:py-24 md:py-32 bg-transparent">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
         <motion.div
           ref={ref}
