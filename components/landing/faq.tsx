@@ -7,7 +7,7 @@ import { ChevronDown } from "lucide-react";
 const faqs = [
   {
     q: "How does the free trial work?",
-    a: "You get full access to all InspectMode Pro features for 7 days — no credit card required. Just install the Chrome extension, create an account, and start inspecting. When your trial ends, you can upgrade to a paid plan to continue.",
+    a: "You get full access to all InspectMode Pro features for 3 days — no credit card required. Just install the Chrome extension, create an account, and start inspecting. When your trial ends, you can upgrade to a paid plan to continue.",
   },
   {
     q: "Can I use this on any website?",
@@ -46,10 +46,10 @@ export function FAQ() {
           <span className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-medium border border-blue-100 mb-4">
             FAQ
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-gray-900 tracking-tight text-balance px-1">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-zinc-900 tracking-tight text-balance px-1">
             Frequently asked questions
           </h2>
-          <p className="mt-5 text-gray-500 text-base sm:text-lg px-1">
+          <p className="mt-5 text-zinc-500 text-base sm:text-lg px-1">
             Everything you need to know about InspectMode Pro.
           </p>
         </motion.div>
@@ -64,13 +64,7 @@ export function FAQ() {
   );
 }
 
-function FAQItem({
-  faq,
-  index,
-}: {
-  faq: (typeof faqs)[0];
-  index: number;
-}) {
+function FAQItem({ faq, index }: { faq: (typeof faqs)[0]; index: number }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-40px" });
@@ -81,20 +75,20 @@ function FAQItem({
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ ...bouncy, delay: index * 0.08 }}
-      className="rounded-2xl border border-gray-100 bg-white overflow-hidden transition-colors hover:border-blue-100"
+      className="rounded-2xl border border-zinc-100 bg-white overflow-hidden transition-colors hover:border-blue-100"
     >
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center justify-between w-full gap-3 px-4 sm:px-6 py-4 sm:py-5 text-left min-w-0"
       >
-        <span className="text-sm sm:text-base font-semibold text-gray-900 pr-2 min-w-0 text-balance">
+        <span className="text-sm sm:text-base font-semibold text-zinc-900 pr-2 min-w-0 text-balance">
           {faq.q}
         </span>
         <motion.div
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          <ChevronDown size={18} className="text-gray-400 shrink-0" />
+          <ChevronDown size={18} className="text-zinc-400 shrink-0" />
         </motion.div>
       </button>
 
@@ -107,7 +101,7 @@ function FAQItem({
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="px-4 sm:px-6 pb-4 sm:pb-5 text-sm text-gray-500 leading-relaxed">
+            <div className="px-4 sm:px-6 pb-4 sm:pb-5 text-sm text-zinc-500 leading-relaxed">
               {faq.a}
             </div>
           </motion.div>

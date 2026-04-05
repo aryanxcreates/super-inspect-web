@@ -1,16 +1,22 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
 import {
   useCallback,
   useEffect,
   useRef,
   type SyntheticEvent,
 } from "react";
+import { Dancing_Script } from "next/font/google";
+import { motion, useInView } from "framer-motion";
 import {
   CHROME_LOGO_ICON_URL,
   CHROME_WEB_STORE_URL,
 } from "@/lib/chrome-web-store";
+
+const designToolkitCursive = Dancing_Script({
+  subsets: ["latin"],
+  weight: ["700"],
+});
 
 const bouncy = { type: "spring", stiffness: 300, damping: 20 };
 
@@ -62,11 +68,13 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...bouncy, delay: 0.2 }}
-          className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 tracking-tight leading-[1.08] text-balance"
+          className="text-4xl sm:text-5xl md:text-7xl font-semibold text-zinc-800 tracking-tight leading-[1.08] text-balance"
         >
           Your all-in-one
           <br />
-          <span className="bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <span
+            className={`${designToolkitCursive.className} text-5xl sm:text-6xl md:text-7xl font-semibold bg-linear-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent`}
+          >
             design toolkit
           </span>{" "}
           for the web
@@ -77,7 +85,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...bouncy, delay: 0.35 }}
-          className="mt-6 text-base sm:text-lg md:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed px-1 sm:px-0"
+          className="mt-6 text-base md:text-lg text-zinc-500 max-w-2xl mx-auto leading-relaxed px-1 sm:px-0"
         >
           Inspect elements, extract assets, pick colors, and analyze fonts — all
           from a sleek overlay right inside your browser. No context switching.
@@ -115,7 +123,7 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.75, duration: 0.5 }}
-          className="mt-4 text-xs text-gray-400"
+          className="mt-4 text-xs text-zinc-400"
         >
           Free 3-day trial &middot; No credit card required
         </motion.p>

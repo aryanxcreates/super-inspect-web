@@ -1,13 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { PLAN_INFO, type Plan } from "@/lib/plans";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Check,
-  CreditCard,
-  Crown,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, Check, CreditCard, Crown, Sparkles } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 
 export const metadata = { title: "Billing — InspectMode Pro" };
@@ -61,10 +55,10 @@ export default async function BillingPage() {
         <p className="text-xs font-semibold uppercase tracking-wider text-blue-600">
           Billing
         </p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900">
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-zinc-900">
           Plan & payments
         </h1>
-        <p className="mt-2 max-w-xl text-sm text-gray-500">
+        <p className="mt-2 max-w-xl text-sm text-zinc-500">
           See what you&apos;re on today, manage billing in Polar, or switch to
           lifetime.
         </p>
@@ -72,14 +66,14 @@ export default async function BillingPage() {
 
       {/* Current plan */}
       <section aria-label="Current plan">
-        <div className="rounded-2xl border border-gray-200/80 bg-white p-6 shadow-sm sm:p-8">
+        <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-sm sm:p-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+              <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
                 Current plan
               </p>
               <div className="mt-2 flex flex-wrap items-center gap-2">
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-2xl font-bold text-zinc-900">
                   {PLAN_INFO[currentPlan].name}
                 </p>
                 {isTrialExpired && (
@@ -98,8 +92,8 @@ export default async function BillingPage() {
                   </span>
                 )}
               </div>
-              <p className="mt-2 text-sm text-gray-500">
-                <span className="font-medium text-gray-700">
+              <p className="mt-2 text-sm text-zinc-500">
+                <span className="font-medium text-zinc-700">
                   {PLAN_INFO[currentPlan].price}
                 </span>{" "}
                 {PLAN_INFO[currentPlan].priceDetail}
@@ -108,18 +102,18 @@ export default async function BillingPage() {
             {hasCustomerId && (
               <a
                 href="/api/portal"
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-50"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50"
               >
                 Customer portal
-                <ArrowRight className="h-4 w-4 text-gray-400" aria-hidden />
+                <ArrowRight className="h-4 w-4 text-zinc-400" aria-hidden />
               </a>
             )}
           </div>
           {!hasCustomerId && !isLifetime && (
-            <p className="mt-4 rounded-xl bg-gray-50 px-4 py-3 text-xs text-gray-500">
-              After you subscribe or buy lifetime, you&apos;ll see a link here to
-              open Polar&apos;s customer portal (invoices, payment method, cancel
-              subscription).
+            <p className="mt-4 rounded-xl bg-zinc-50 px-4 py-3 text-xs text-zinc-500">
+              After you subscribe or buy lifetime, you&apos;ll see a link here
+              to open Polar&apos;s customer portal (invoices, payment method,
+              cancel subscription).
             </p>
           )}
         </div>
@@ -139,8 +133,9 @@ export default async function BillingPage() {
                     Start with a free trial
                   </h2>
                   <p className="mt-1 max-w-md text-sm text-blue-100/90">
-                    Full Pro access for the trial period. No credit card required
-                    — upgrade to monthly or lifetime when you&apos;re ready.
+                    Full Pro access for the trial period. No credit card
+                    required — upgrade to monthly or lifetime when you&apos;re
+                    ready.
                   </p>
                 </div>
               </div>
@@ -166,10 +161,10 @@ export default async function BillingPage() {
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
               <Crown className="h-7 w-7" aria-hidden />
             </div>
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2 className="text-xl font-bold text-zinc-900">
               You&apos;re on lifetime access
             </h2>
-            <p className="text-sm leading-relaxed text-gray-600">
+            <p className="text-sm leading-relaxed text-zinc-600">
               No subscription to manage. Your license stays on this account
               forever.
             </p>
@@ -186,9 +181,7 @@ export default async function BillingPage() {
       {/* Paid options: lifetime (featured) + subscription */}
       {showPlanCards && !isLifetime && (
         <section aria-label="Choose a plan" className="space-y-4">
-
-
-          <div className="rounded-2xl border border-gray-200/80 bg-linear-to-b from-gray-50/90 to-white p-4 shadow-sm sm:p-6">
+          <div className="rounded-2xl border border-zinc-200/80 bg-linear-to-b from-zinc-50/90 to-white p-4 shadow-sm sm:p-6">
             <div className="grid gap-6 lg:grid-cols-12 lg:items-stretch lg:gap-0">
               {(["lifetime", "subscription"] as Plan[]).map((planKey) => {
                 const plan = PLAN_INFO[planKey];
@@ -219,7 +212,7 @@ export default async function BillingPage() {
                     key={planKey}
                     className={`flex min-h-0 flex-col lg:min-h-88 ${
                       isSubscriptionPlan
-                        ? "lg:col-span-5 border-t border-gray-200 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"
+                        ? "lg:col-span-5 border-t border-zinc-200 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"
                         : "lg:col-span-7 lg:pr-8"
                     }`}
                   >
@@ -237,7 +230,9 @@ export default async function BillingPage() {
                           {plan.name}
                         </h3>
                         <div className="mt-3 flex items-baseline gap-1">
-                          <span className="text-4xl font-bold">{plan.price}</span>
+                          <span className="text-4xl font-bold">
+                            {plan.price}
+                          </span>
                           <span className="text-sm text-blue-200">
                             {plan.priceDetail}
                           </span>
@@ -284,10 +279,10 @@ export default async function BillingPage() {
                             {plan.name}
                           </h3>
                           <div className="mt-2 flex items-baseline gap-1">
-                            <span className="text-4xl font-bold text-gray-900">
+                            <span className="text-4xl font-bold text-zinc-900">
                               {plan.price}
                             </span>
-                            <span className="text-sm text-gray-500">
+                            <span className="text-sm text-zinc-500">
                               {plan.priceDetail}
                             </span>
                           </div>
@@ -295,7 +290,7 @@ export default async function BillingPage() {
                             {plan.features.map((f) => (
                               <li
                                 key={f}
-                                className="flex items-start gap-2 text-sm text-gray-700"
+                                className="flex items-start gap-2 text-sm text-zinc-700"
                               >
                                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
                                   <Check
@@ -311,7 +306,7 @@ export default async function BillingPage() {
                           {ctaHref ? (
                             <Link
                               href={ctaHref}
-                              className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-gray-800"
+                              className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-zinc-800"
                             >
                               {ctaLabel}
                               <ArrowRight className="h-4 w-4" aria-hidden />

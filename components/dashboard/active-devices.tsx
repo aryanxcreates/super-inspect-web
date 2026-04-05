@@ -28,10 +28,20 @@ export function ActiveDevices() {
         const json = await res.json();
         setData(json);
       } else {
-        setData({ devices: [], plan: "free", maxDevices: 0, canDeactivate: false });
+        setData({
+          devices: [],
+          plan: "free",
+          maxDevices: 0,
+          canDeactivate: false,
+        });
       }
     } catch {
-      setData({ devices: [], plan: "free", maxDevices: 0, canDeactivate: false });
+      setData({
+        devices: [],
+        plan: "free",
+        maxDevices: 0,
+        canDeactivate: false,
+      });
     } finally {
       setLoading(false);
     }
@@ -59,14 +69,14 @@ export function ActiveDevices() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+      <div className="bg-white rounded-2xl p-8 shadow-sm border border-zinc-100">
         <div className="flex items-start gap-4 mb-6">
           <div className="p-3 bg-green-50 rounded-xl text-green-600">
             <Monitor size={24} />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-gray-900">Active Devices</h2>
-            <p className="text-gray-500 text-sm">Loading…</p>
+            <h2 className="text-lg font-bold text-zinc-900">Active Devices</h2>
+            <p className="text-zinc-500 text-sm">Loading…</p>
           </div>
         </div>
       </div>
@@ -79,35 +89,37 @@ export function ActiveDevices() {
   const count = devices.length;
 
   return (
-    <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+    <div className="bg-white rounded-2xl p-8 shadow-sm border border-zinc-100">
       <div className="flex items-start gap-4 mb-6">
         <div className="p-3 bg-green-50 rounded-xl text-green-600">
           <Monitor size={24} />
         </div>
         <div>
-          <h2 className="text-lg font-bold text-gray-900">Active Devices</h2>
-          <p className="text-gray-500 text-sm">Manage your activated devices</p>
+          <h2 className="text-lg font-bold text-zinc-900">Active Devices</h2>
+          <p className="text-zinc-500 text-sm">Manage your activated devices</p>
         </div>
       </div>
 
       <div className="mb-6">
         <div className="flex justify-between text-sm font-medium mb-2">
-          <span className="text-gray-900">
+          <span className="text-zinc-900">
             {count} / {maxDevices} devices activated
           </span>
         </div>
-        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+        <div className="h-2 bg-zinc-100 rounded-full overflow-hidden">
           <div
             className="h-full bg-green-500 rounded-full transition-all duration-500 ease-out"
             style={{
-              width: maxDevices ? `${Math.min(100, (count / maxDevices) * 100)}%` : "0%",
+              width: maxDevices
+                ? `${Math.min(100, (count / maxDevices) * 100)}%`
+                : "0%",
             }}
           />
         </div>
       </div>
 
       {maxDevices === 0 ? (
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-zinc-400">
           Start a trial or subscribe to activate devices with your license key.
         </p>
       ) : (
@@ -117,22 +129,28 @@ export function ActiveDevices() {
               {devices.map((d) => (
                 <li
                   key={d.id}
-                  className="flex items-center justify-between py-3 px-3 rounded-lg bg-gray-50 border border-gray-100"
+                  className="flex items-center justify-between py-3 px-3 rounded-lg bg-zinc-50 border border-zinc-100"
                 >
                   <div className="flex flex-col">
-                    <p className="text-sm font-semibold text-gray-900">
+                    <p className="text-sm font-semibold text-zinc-900">
                       {(d.label || "Device").split(" · ")[0]}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-zinc-500">
                       {(() => {
                         const parts = (d.label || "").split(" · ");
-                        const os = parts.length > 1 ? parts.slice(1).join(" · ") : null;
-                        const date = new Date(d.activatedAt).toLocaleDateString(undefined, {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        });
-                        return os ? `${os} · Activated ${date}` : `Activated ${date}`;
+                        const os =
+                          parts.length > 1 ? parts.slice(1).join(" · ") : null;
+                        const date = new Date(d.activatedAt).toLocaleDateString(
+                          undefined,
+                          {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          },
+                        );
+                        return os
+                          ? `${os} · Activated ${date}`
+                          : `Activated ${date}`;
                       })()}
                     </p>
                   </div>
@@ -152,13 +170,15 @@ export function ActiveDevices() {
           )}
 
           {!canDeactivate && count === 1 && (
-            <p className="text-xs text-gray-500">
-              Trial and Subscription are limited to one device. Upgrade to Lifetime to use up to 3 devices and manage them here.
+            <p className="text-xs text-zinc-500">
+              Trial and Subscription are limited to one device. Upgrade to
+              Lifetime to use up to 3 devices and manage them here.
             </p>
           )}
           {canDeactivate && count < maxDevices && (
-            <p className="text-sm text-gray-400">
-              Install the extension and enter your license key to activate another device.
+            <p className="text-sm text-zinc-400">
+              Install the extension and enter your license key to activate
+              another device.
             </p>
           )}
         </>

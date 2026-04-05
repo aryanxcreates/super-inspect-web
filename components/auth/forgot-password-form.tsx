@@ -20,7 +20,8 @@ export function ForgotPasswordForm() {
 
   const source = searchParams.get("source");
   const returnTo = searchParams.get("returnTo");
-  const isExtension = source === "extension" && returnTo?.startsWith("chrome-extension://");
+  const isExtension =
+    source === "extension" && returnTo?.startsWith("chrome-extension://");
 
   const loginHref = isExtension
     ? `/login?source=extension&returnTo=${encodeURIComponent(returnTo!)}`
@@ -32,9 +33,12 @@ export function ForgotPasswordForm() {
     setError(null);
 
     const supabase = createClient();
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: getPasswordResetRedirectUrl(window.location.origin),
-    });
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+      email.trim(),
+      {
+        redirectTo: getPasswordResetRedirectUrl(window.location.origin),
+      },
+    );
 
     setLoading(false);
 
@@ -49,15 +53,19 @@ export function ForgotPasswordForm() {
   if (sent) {
     return (
       <div className="w-full max-w-[min(100%,24rem)] text-center">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900">
           Check your email
         </h1>
-        <p className="text-sm text-gray-500 mt-3 leading-relaxed">
-          If an account exists for <strong className="text-gray-700">{email}</strong>, we sent a
-          link to reset your password. The link expires after a short time.
+        <p className="text-sm text-zinc-500 mt-3 leading-relaxed">
+          If an account exists for{" "}
+          <strong className="text-zinc-700">{email}</strong>, we sent a link to
+          reset your password. The link expires after a short time.
         </p>
-        <p className="text-sm text-gray-500 mt-4">
-          <Link href={loginHref} className="text-blue-600 hover:text-blue-700 font-medium">
+        <p className="text-sm text-zinc-500 mt-4">
+          <Link
+            href={loginHref}
+            className="text-blue-600 hover:text-blue-700 font-medium"
+          >
             Back to log in
           </Link>
         </p>
@@ -68,10 +76,10 @@ export function ForgotPasswordForm() {
   return (
     <div className="w-full max-w-[min(100%,24rem)]">
       <div className="text-center mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900">
           Reset your password
         </h1>
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-sm text-zinc-500 mt-2">
           Enter your email and we&apos;ll send you a reset link.
         </p>
         {isExtension && (
@@ -94,7 +102,7 @@ export function ForgotPasswordForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-zinc-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+            className="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm text-zinc-900 placeholder:text-zinc-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
           />
         </div>
 
@@ -113,8 +121,11 @@ export function ForgotPasswordForm() {
         </button>
       </form>
 
-      <p className="text-center text-sm text-gray-500 mt-8">
-        <Link href={loginHref} className="text-blue-600 hover:text-blue-700 font-medium">
+      <p className="text-center text-sm text-zinc-500 mt-8">
+        <Link
+          href={loginHref}
+          className="text-blue-600 hover:text-blue-700 font-medium"
+        >
           Back to log in
         </Link>
       </p>

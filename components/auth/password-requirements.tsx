@@ -9,7 +9,7 @@ export function PasswordRequirements({ password }: { password: string }) {
 
   return (
     <ul
-      className="mt-3 m-0 list-none space-y-1.5 rounded-lg border border-gray-100 bg-gray-50/80 px-3 py-2.5"
+      className="mt-3 m-0 list-none space-y-1.5 rounded-lg border border-zinc-100 bg-zinc-50/80 px-3 py-2.5"
       aria-live="polite"
     >
       <PasswordRule ok={policy.minLength}>At least 8 characters</PasswordRule>
@@ -20,7 +20,13 @@ export function PasswordRequirements({ password }: { password: string }) {
   );
 }
 
-function PasswordRule({ ok, children }: { ok: boolean; children: React.ReactNode }) {
+function PasswordRule({
+  ok,
+  children,
+}: {
+  ok: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <li className="flex items-center gap-2 text-xs">
       {ok ? (
@@ -29,11 +35,11 @@ function PasswordRule({ ok, children }: { ok: boolean; children: React.ReactNode
         </span>
       ) : (
         <span
-          className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-gray-300 bg-white"
+          className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white"
           aria-hidden
         />
       )}
-      <span className={ok ? "text-gray-700" : "text-gray-400"}>{children}</span>
+      <span className={ok ? "text-zinc-700" : "text-zinc-400"}>{children}</span>
     </li>
   );
 }

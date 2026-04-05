@@ -79,14 +79,15 @@ export function SignupForm() {
   if (success) {
     return (
       <div className="w-full max-w-[min(100%,24rem)] text-center">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900">
           Check your email
         </h1>
-        <p className="text-sm text-gray-500 mt-3 leading-relaxed">
-          We sent a confirmation link to <strong className="text-gray-700">{email}</strong>. Click
-          it to activate your account.
+        <p className="text-sm text-zinc-500 mt-3 leading-relaxed">
+          We sent a confirmation link to{" "}
+          <strong className="text-zinc-700">{email}</strong>. Click it to
+          activate your account.
         </p>
-        <p className="text-sm text-gray-500 mt-6">
+        <p className="text-sm text-zinc-500 mt-6">
           <Link
             href={
               isExtension
@@ -105,10 +106,12 @@ export function SignupForm() {
   return (
     <div className="w-full max-w-[min(100%,24rem)]">
       <div className="text-center mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900">
           Create your account
         </h1>
-        <p className="text-sm text-gray-500 mt-2">Start your free 7-day trial</p>
+        <p className="text-sm text-zinc-500 mt-2">
+          Start your free 3-day trial
+        </p>
         {isExtension && (
           <p className="text-xs text-blue-600 mt-3 bg-blue-50 px-3 py-1.5 rounded-lg inline-block max-w-full">
             You&apos;ll be redirected back to the extension after signup
@@ -128,9 +131,9 @@ export function SignupForm() {
       </div>
 
       <div className="flex items-center gap-3 mb-6">
-        <div className="flex-1 h-px bg-gray-200" />
+        <div className="flex-1 h-px bg-zinc-200" />
         <span className="text-xs text-zinc-500 font-medium">or</span>
-        <div className="flex-1 h-px bg-gray-200" />
+        <div className="flex-1 h-px bg-zinc-200" />
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -146,7 +149,7 @@ export function SignupForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-zinc-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+            className="w-full px-4 py-3 rounded-xl border border-zinc-200 text-sm text-zinc-900 placeholder:text-zinc-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
           />
         </div>
 
@@ -164,15 +167,19 @@ export function SignupForm() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={8}
-              className="w-full pl-4 pr-12 py-3 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-zinc-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+              className="w-full pl-4 pr-12 py-3 rounded-xl border border-zinc-200 text-sm text-zinc-900 placeholder:text-zinc-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
             />
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+              className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-9 w-9 items-center justify-center rounded-lg text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 transition-colors"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
             </button>
           </div>
           <PasswordRequirements password={password} />
@@ -193,7 +200,7 @@ export function SignupForm() {
         </button>
       </form>
 
-      <p className="text-center text-sm text-gray-500 mt-8">
+      <p className="text-center text-sm text-zinc-500 mt-8">
         Already have an account?{" "}
         <Link
           href={

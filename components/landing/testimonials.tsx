@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Star } from "lucide-react";
@@ -11,7 +12,8 @@ const testimonials = [
     name: "Sarah Chen",
     role: "Senior Product Designer",
     company: "Figma",
-    avatar: "SC",
+    avatarUrl:
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=128&h=128&fit=crop&crop=face&q=80",
   },
   {
     quote:
@@ -19,7 +21,8 @@ const testimonials = [
     name: "Marcus Johnson",
     role: "Frontend Engineer",
     company: "Vercel",
-    avatar: "MJ",
+    avatarUrl:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=128&h=128&fit=crop&crop=face&q=80",
   },
   {
     quote:
@@ -27,7 +30,8 @@ const testimonials = [
     name: "Emily Rodriguez",
     role: "UI/UX Designer",
     company: "Linear",
-    avatar: "ER",
+    avatarUrl:
+      "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=128&h=128&fit=crop&crop=face&q=80",
   },
 ];
 
@@ -42,7 +46,10 @@ export function Testimonials() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="testimonials" className="py-16 sm:py-24 md:py-32 bg-transparent">
+    <section
+      id="testimonials"
+      className="py-16 sm:py-24 md:py-32 bg-transparent"
+    >
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <motion.div
           ref={ref}
@@ -54,11 +61,12 @@ export function Testimonials() {
           <span className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-medium border border-blue-100 mb-4">
             Testimonials
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-gray-900 tracking-tight text-balance px-1">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-zinc-900 tracking-tight text-balance px-1">
             Loved by designers &amp; developers
           </h2>
-          <p className="mt-5 text-gray-500 max-w-lg mx-auto text-base sm:text-lg px-1">
-            Join thousands of professionals who ship faster with InspectMode Pro.
+          <p className="mt-5 text-zinc-500 max-w-lg mx-auto text-base sm:text-lg px-1">
+            Join thousands of professionals who ship faster with InspectMode
+            Pro.
           </p>
         </motion.div>
 
@@ -92,32 +100,32 @@ function TestimonialCard({
         delay: index * 0.12,
       }}
       whileHover={{ y: -4 }}
-      className="group relative flex flex-col p-6 rounded-2xl bg-white border border-gray-100 hover:border-blue-100 transition-all duration-300 hover:shadow-lg hover:shadow-blue-50"
+      className="group relative flex flex-col p-6 rounded-2xl bg-white border border-zinc-100 hover:border-blue-100 transition-all duration-300 hover:shadow-lg hover:shadow-blue-50"
     >
       {/* Stars */}
       <div className="flex gap-0.5 mb-4">
         {Array.from({ length: 5 }).map((_, j) => (
-          <Star
-            key={j}
-            size={16}
-            className="fill-amber-400 text-amber-400"
-          />
+          <Star key={j} size={16} className="fill-amber-400 text-amber-400" />
         ))}
       </div>
 
-      <p className="text-gray-600 text-sm leading-relaxed flex-1">
+      <p className="text-zinc-600 text-sm leading-relaxed flex-1">
         &ldquo;{testimonial.quote}&rdquo;
       </p>
 
-      <div className="mt-6 flex items-center gap-3 pt-5 border-t border-gray-50">
-        <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold">
-          {testimonial.avatar}
-        </div>
+      <div className="mt-6 flex items-center gap-3 pt-5 border-t border-zinc-50">
+        <Image
+          src={testimonial.avatarUrl}
+          alt={`${testimonial.name}`}
+          width={40}
+          height={40}
+          className="w-10 h-10 rounded-full object-cover ring-2 ring-zinc-100"
+        />
         <div>
-          <p className="text-sm font-semibold text-gray-900">
+          <p className="text-sm font-semibold text-zinc-900">
             {testimonial.name}
           </p>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-zinc-400">
             {testimonial.role}, {testimonial.company}
           </p>
         </div>

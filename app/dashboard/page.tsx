@@ -89,14 +89,15 @@ export default async function DashboardPage({
           <p className="font-semibold">Your plan is active</p>
           <p className="mt-1.5 leading-relaxed text-emerald-900/90">
             Checkout completed successfully. Open the InspectMode Pro extension
-            and sign in with your account to use your license. If you haven&apos;t
-            installed it yet, use the Chrome extension section below.
+            and sign in with your account to use your license. If you
+            haven&apos;t installed it yet, use the Chrome extension section
+            below.
           </p>
         </div>
       )}
 
       {/* Header */}
-      <header className="relative overflow-hidden rounded-2xl border border-gray-200/80 bg-white px-6 py-8 sm:px-8 sm:py-10 shadow-sm">
+      <header className="relative overflow-hidden rounded-2xl border border-zinc-200/80 bg-white px-6 py-8 sm:px-8 sm:py-10 shadow-sm">
         <div
           className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-blue-500/10 blur-2xl"
           aria-hidden
@@ -109,10 +110,10 @@ export default async function DashboardPage({
           <p className="text-xs font-semibold uppercase tracking-wider text-blue-600">
             Dashboard
           </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">
             Welcome back, {user?.email?.split("@")[0]}
           </h1>
-          <p className="mt-2 max-w-xl text-gray-500">
+          <p className="mt-2 max-w-xl text-zinc-500">
             Your license, devices, and extension in one place.
           </p>
         </div>
@@ -121,8 +122,7 @@ export default async function DashboardPage({
       {/* Upgrade options — lifetime first; trial paired when available */}
       {showUpgradeRow && (
         <section aria-label="Upgrade options" className="space-y-4">
-
-          <div className="rounded-2xl border border-gray-200/80 bg-linear-to-b from-gray-50/90 to-white p-4 shadow-sm sm:p-6">
+          <div className="rounded-2xl border border-zinc-200/80 bg-linear-to-b from-zinc-50/90 to-white p-4 shadow-sm sm:p-6">
             <div
               className={`grid w-full gap-6 ${showBothUpgradeOptions ? "lg:grid-cols-12 lg:items-stretch lg:gap-0" : ""}`}
             >
@@ -146,10 +146,10 @@ export default async function DashboardPage({
                       <p className="mt-5 text-xs font-semibold uppercase tracking-wide text-amber-800/90">
                         One-time purchase
                       </p>
-                      <h3 className="mt-1 text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+                      <h3 className="mt-1 text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
                         Lifetime access
                       </h3>
-                      <p className="mt-2 max-w-lg text-sm leading-relaxed text-gray-600">
+                      <p className="mt-2 max-w-lg text-sm leading-relaxed text-zinc-600">
                         {plan === "subscription"
                           ? "Stop renewals. Own InspectMode Pro forever with a single purchase."
                           : "Pay once. Every Pro feature, for life - no subscriptions or renewals."}
@@ -162,10 +162,14 @@ export default async function DashboardPage({
                         ].map((line) => (
                           <li
                             key={line}
-                            className="flex items-start gap-2.5 text-sm font-medium text-gray-800"
+                            className="flex items-start gap-2.5 text-sm font-medium text-zinc-800"
                           >
                             <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200/80">
-                              <Check className="h-3 w-3" strokeWidth={3} aria-hidden />
+                              <Check
+                                className="h-3 w-3"
+                                strokeWidth={3}
+                                aria-hidden
+                              />
                             </span>
                             {line}
                           </li>
@@ -174,10 +178,13 @@ export default async function DashboardPage({
                       <div className="mt-8 flex flex-col gap-2 sm:mt-6">
                         <Link
                           href={`/api/checkout?products=${lifetimeProductId}&customerEmail=${encodeURIComponent(user!.email ?? "")}`}
-                          className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500/80"
+                          className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500/80"
                         >
                           Get lifetime access
-                          <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" aria-hidden />
+                          <ArrowRight
+                            className="h-4 w-4 transition group-hover:translate-x-0.5"
+                            aria-hidden
+                          />
                         </Link>
                       </div>
                     </div>
@@ -189,7 +196,7 @@ export default async function DashboardPage({
                 <div
                   className={
                     showBothUpgradeOptions
-                      ? "lg:col-span-5 flex min-h-0 flex-col justify-center border-t border-gray-200 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"
+                      ? "lg:col-span-5 flex min-h-0 flex-col justify-center border-t border-zinc-200 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"
                       : "flex"
                   }
                 >
@@ -204,30 +211,34 @@ export default async function DashboardPage({
                             <Sparkles className="h-5 w-5" aria-hidden />
                           </div>
                           <div>
-                            <h3 className="text-lg font-bold text-gray-900">
+                            <h3 className="text-lg font-bold text-zinc-900">
                               Free trial
                             </h3>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-zinc-500">
                               Full access · No card required
                             </p>
                           </div>
                         </div>
-                        <p className="mt-4 text-sm leading-relaxed text-gray-600">
+                        <p className="mt-4 text-sm leading-relaxed text-zinc-600">
                           Same Pro tools for a limited time. Upgrade to lifetime
                           whenever you’re ready.
                         </p>
                         <ul className="mt-4 space-y-2">
-                          {["All tools during trial", "Cancel before it ends"].map(
-                            (line) => (
-                              <li
-                                key={line}
-                                className="flex items-center gap-2 text-sm text-gray-700"
-                              >
-                                <Check className="h-4 w-4 shrink-0 text-blue-600" aria-hidden />
-                                {line}
-                              </li>
-                            ),
-                          )}
+                          {[
+                            "All tools during trial",
+                            "Cancel before it ends",
+                          ].map((line) => (
+                            <li
+                              key={line}
+                              className="flex items-center gap-2 text-sm text-zinc-700"
+                            >
+                              <Check
+                                className="h-4 w-4 shrink-0 text-blue-600"
+                                aria-hidden
+                              />
+                              {line}
+                            </li>
+                          ))}
                         </ul>
                       </div>
                       <Link
@@ -277,7 +288,11 @@ export default async function DashboardPage({
                                   className="flex items-center gap-2 text-sm font-medium text-white/95"
                                 >
                                   <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-400/25 text-emerald-100 ring-1 ring-emerald-300/30">
-                                    <Check className="h-3 w-3" strokeWidth={3} aria-hidden />
+                                    <Check
+                                      className="h-3 w-3"
+                                      strokeWidth={3}
+                                      aria-hidden
+                                    />
                                   </span>
                                   {line}
                                 </li>
@@ -292,7 +307,10 @@ export default async function DashboardPage({
                             className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-sm font-semibold text-indigo-700 shadow-sm transition hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                           >
                             Activate free trial
-                            <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" aria-hidden />
+                            <ArrowRight
+                              className="h-4 w-4 transition group-hover:translate-x-0.5"
+                              aria-hidden
+                            />
                           </Link>
                           <p className="mt-3 text-center text-[11px] text-blue-200/80 lg:text-left">
                             Secure checkout via Polar
@@ -361,16 +379,14 @@ export default async function DashboardPage({
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-start">
         {/* License */}
         <div className="lg:col-span-7 flex flex-col gap-6">
-          <div className="rounded-2xl border border-gray-200/80 bg-white p-6 shadow-sm sm:p-8">
+          <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-sm sm:p-8">
             <div className="mb-8 flex items-start gap-4">
               <div className="rounded-xl bg-blue-50 p-3 text-blue-600">
                 <ShieldCheck className="h-6 w-6" aria-hidden />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-gray-900">
-                  License
-                </h2>
-                <p className="text-sm text-gray-500">
+                <h2 className="text-lg font-bold text-zinc-900">License</h2>
+                <p className="text-sm text-zinc-500">
                   Key and plan tied to your account
                 </p>
               </div>
@@ -378,25 +394,25 @@ export default async function DashboardPage({
 
             <div className="space-y-5">
               <div>
-                <label className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                <label className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
                   License key
                 </label>
                 <div className="mt-2 flex items-center gap-2">
-                  <code className="min-h-11 flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-mono text-sm text-gray-900">
+                  <code className="min-h-11 flex-1 rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 font-mono text-sm text-zinc-900">
                     {licenseKey ?? "No active license"}
                   </code>
                   {licenseKey && <CopyButton value={licenseKey} />}
                 </div>
                 {!licenseKey && needsTrial && (
-                  <p className="mt-2 text-xs text-gray-400">
+                  <p className="mt-2 text-xs text-zinc-400">
                     Start a trial to generate your license key.
                   </p>
                 )}
               </div>
 
-              <dl className="divide-y divide-gray-100 rounded-xl border border-gray-100 bg-gray-50/50">
+              <dl className="divide-y divide-zinc-100 rounded-xl border border-zinc-100 bg-zinc-50/50">
                 <div className="flex items-center justify-between gap-4 px-4 py-3">
-                  <dt className="text-sm text-gray-500">Plan</dt>
+                  <dt className="text-sm text-zinc-500">Plan</dt>
                   <dd>
                     <span
                       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide ${
@@ -406,7 +422,7 @@ export default async function DashboardPage({
                             ? "bg-blue-100 text-blue-800"
                             : plan === "trial"
                               ? "bg-amber-100 text-amber-800"
-                              : "bg-gray-100 text-gray-800"
+                              : "bg-zinc-100 text-zinc-800"
                       }`}
                     >
                       {plan === "free" ? "No plan" : plan}
@@ -418,52 +434,52 @@ export default async function DashboardPage({
                   </dd>
                 </div>
                 <div className="flex items-center justify-between gap-4 px-4 py-3">
-                  <dt className="text-sm text-gray-500">Email</dt>
-                  <dd className="text-sm font-medium text-gray-900 truncate max-w-[60%] text-right">
+                  <dt className="text-sm text-zinc-500">Email</dt>
+                  <dd className="text-sm font-medium text-zinc-900 truncate max-w-[60%] text-right">
                     {user?.email}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between gap-4 px-4 py-3">
-                  <dt className="text-sm text-gray-500">Seats</dt>
-                  <dd className="text-sm font-medium text-gray-900">1</dd>
+                  <dt className="text-sm text-zinc-500">Seats</dt>
+                  <dd className="text-sm font-medium text-zinc-900">1</dd>
                 </div>
                 <div className="flex items-center justify-between gap-4 px-4 py-3">
-                  <dt className="text-sm text-gray-500">Member since</dt>
-                  <dd className="text-sm font-medium text-gray-900">
+                  <dt className="text-sm text-zinc-500">Member since</dt>
+                  <dd className="text-sm font-medium text-zinc-900">
                     {memberSince}
                   </dd>
                 </div>
               </dl>
             </div>
           </div>
-          <div className="rounded-2xl border border-gray-200/80 bg-white p-6 shadow-sm">
-            <h2 className="text-base font-bold text-gray-900">
+          <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-sm">
+            <h2 className="text-base font-bold text-zinc-900">
               Chrome extension
             </h2>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-zinc-500">
               Install from the Chrome Web Store, then sign in with your account.
             </p>
             <a
               href={CHROME_WEB_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 flex w-full items-center justify-between gap-4 rounded-xl border border-gray-200 bg-gray-50/80 px-4 py-4 transition hover:border-blue-200 hover:bg-blue-50/50"
+              className="mt-5 flex w-full items-center justify-between gap-4 rounded-xl border border-zinc-200 bg-zinc-50/80 px-4 py-4 transition hover:border-blue-200 hover:bg-blue-50/50"
             >
               <div className="flex items-center gap-3 min-w-0">
                 <div className="rounded-lg bg-amber-100 p-2 text-amber-700 shrink-0">
                   <Download className="h-5 w-5" aria-hidden />
                 </div>
                 <div className="text-left min-w-0">
-                  <p className="text-sm font-semibold text-gray-900">
+                  <p className="text-sm font-semibold text-zinc-900">
                     Install InspectMode Pro
                   </p>
-                  <p className="text-xs text-gray-500 truncate">
+                  <p className="text-xs text-zinc-500 truncate">
                     Chrome Web Store
                   </p>
                 </div>
               </div>
               <ExternalLink
-                className="h-5 w-5 shrink-0 text-gray-400"
+                className="h-5 w-5 shrink-0 text-zinc-400"
                 aria-hidden
               />
             </a>
