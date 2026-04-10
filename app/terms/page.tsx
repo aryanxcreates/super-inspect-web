@@ -1,7 +1,9 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Terms & Conditions — InspectMode Pro",
+  description: "Terms and conditions for using InspectMode Pro and related services.",
 };
 
 export default function TermsPage() {

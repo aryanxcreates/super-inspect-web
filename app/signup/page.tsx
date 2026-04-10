@@ -1,7 +1,12 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { SignupForm } from "@/components/auth/signup-form";
 
-export const metadata = { title: "Sign Up — InspectMode Pro" };
+export const metadata: Metadata = {
+  title: "Sign Up — InspectMode Pro",
+  description:
+    "Create your InspectMode Pro account and start inspecting layouts, colors, and typography on any site.",
+};
 
 export default function SignupPage() {
   return (

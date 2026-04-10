@@ -1,7 +1,9 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Contact Us — InspectMode Pro",
+  description: "Get in touch with the InspectMode Pro team for support, feedback, or partnership questions.",
 };
 
 export default function ContactPage() {

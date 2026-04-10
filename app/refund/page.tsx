@@ -1,7 +1,9 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Refund Policy — InspectMode Pro",
+  description: "Refund eligibility and process for InspectMode Pro purchases.",
 };
 
 export default function RefundPage() {

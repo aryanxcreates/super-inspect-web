@@ -1,7 +1,11 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { LoginForm } from "@/components/auth/login-form";
 
-export const metadata = { title: "Log In — InspectMode Pro" };
+export const metadata: Metadata = {
+  title: "Log In — InspectMode Pro",
+  description: "Sign in to your InspectMode Pro account to manage your subscription and devices.",
+};
 
 export default function LoginPage() {
   return (

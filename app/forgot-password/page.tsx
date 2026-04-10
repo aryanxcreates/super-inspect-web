@@ -1,7 +1,10 @@
 import { Suspense } from "react";
 import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
 
-export const metadata = { title: "Reset password — InspectMode Pro" };
+export const metadata = {
+  title: "Reset password — InspectMode Pro",
+  robots: { index: false, follow: false },
+};
 
 export default function ForgotPasswordPage() {
   return (

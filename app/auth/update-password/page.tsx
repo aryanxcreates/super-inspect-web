@@ -2,7 +2,10 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { UpdatePasswordForm } from "@/components/auth/update-password-form";
 
-export const metadata = { title: "New password — InspectMode Pro" };
+export const metadata = {
+  title: "New password — InspectMode Pro",
+  robots: { index: false, follow: false },
+};
 
 export default async function UpdatePasswordPage() {
   const supabase = await createClient();
