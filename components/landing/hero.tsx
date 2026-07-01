@@ -12,6 +12,7 @@ import {
   CHROME_LOGO_ICON_URL,
   CHROME_WEB_STORE_URL,
 } from "@/lib/chrome-web-store";
+import { VSL_VIDEO_URL } from "@/lib/media";
 
 const designToolkitCursive = Dancing_Script({
   subsets: ["latin"],
@@ -19,9 +20,6 @@ const designToolkitCursive = Dancing_Script({
 });
 
 const bouncy = { type: "spring", stiffness: 300, damping: 20 };
-
-const VSL_VIDEO_URL =
-  "https://yefkwpddzxauddxeujlr.supabase.co/storage/v1/object/public/media/vsl%20v3.mp4";
 
 export function Hero() {
   const videoWrapRef = useRef<HTMLDivElement>(null);

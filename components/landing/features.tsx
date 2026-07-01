@@ -3,9 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { Download, Palette, Type, Code } from "lucide-react";
-
-const MEDIA_BASE =
-  "https://yefkwpddzxauddxeujlr.supabase.co/storage/v1/object/public/media";
+import { MEDIA_BASE_URL } from "@/lib/media";
 
 /** Order matches videos: 1 = CSS inspect, 2 = assets, 3 = colors, 4 = fonts */
 const features = [
@@ -15,7 +13,7 @@ const features = [
     description:
       "Hover any element to see CSS properties, spacing, dimensions, and typography in a beautiful HUD overlay. Copy any property instantly.",
     color: "blue",
-    videoSrc: `${MEDIA_BASE}/1.mp4`,
+    videoSrc: `${MEDIA_BASE_URL}/1.mp4`,
   },
   {
     icon: Download,
@@ -23,7 +21,7 @@ const features = [
     description:
       "Find every image, SVG, video, and background asset on the page. Preview, copy, and download in one click — no more digging through DevTools.",
     color: "emerald",
-    videoSrc: `${MEDIA_BASE}/2.mp4`,
+    videoSrc: `${MEDIA_BASE_URL}/2.mp4`,
   },
   {
     icon: Palette,
@@ -31,7 +29,7 @@ const features = [
     description:
       "Extract every color used on the page. Switch between HEX, RGB, and HSL with a click. Pick any color with the built-in eyedropper.",
     color: "violet",
-    videoSrc: `${MEDIA_BASE}/3.mp4`,
+    videoSrc: `${MEDIA_BASE_URL}/3.mp4`,
   },
   {
     icon: Type,
@@ -39,7 +37,7 @@ const features = [
     description:
       "See all fonts, weights, and sizes used on the page with live previews. Copy font names and full CSS stacks instantly.",
     color: "amber",
-    videoSrc: `${MEDIA_BASE}/4.mp4`,
+    videoSrc: `${MEDIA_BASE_URL}/4.mp4`,
   },
 ];
 
