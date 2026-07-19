@@ -43,7 +43,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden pt-28 pb-10 md:pt-34 md:pb-10">
+    <section className="relative overflow-hidden pt-36 pb-10 md:pt-44 md:pb-10">
       {/* Hero-only spotlight — page background handles grid + base wash */}
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
         <div className="absolute inset-0 bg-radial-[ellipse_95%_70%_at_50%_20%] from-blue-500/6 via-transparent to-transparent" />

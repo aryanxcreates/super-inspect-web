@@ -57,7 +57,7 @@ export function Navbar({ initialLoggedIn = false }: NavbarProps) {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`transition-all duration-300 ${
         scrolled || menuOpen
           ? "bg-white/50 backdrop-blur-xl border-b border-zinc-100 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
           : "bg-transparent"
@@ -129,14 +129,14 @@ export function Navbar({ initialLoggedIn = false }: NavbarProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden fixed inset-0 z-40 top-14 sm:top-16 flex flex-col pointer-events-none"
+            className="md:hidden fixed inset-0 z-40 top-[6rem] sm:top-[6.5rem] flex flex-col pointer-events-none"
           >
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="pointer-events-auto shrink-0 border-b border-zinc-100 bg-white/95 backdrop-blur-xl shadow-lg shadow-zinc-200/40 max-h-[min(70vh,calc(100dvh-3.5rem))] overflow-y-auto sm:max-h-[min(70vh,calc(100dvh-4rem))]"
+              className="pointer-events-auto shrink-0 border-b border-zinc-100 bg-white/95 backdrop-blur-xl shadow-lg shadow-zinc-200/40 max-h-[min(70vh,calc(100dvh-6rem))] overflow-y-auto sm:max-h-[min(70vh,calc(100dvh-6.5rem))]"
             >
               <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col gap-1">
                 {navLinks.map((link) => (
