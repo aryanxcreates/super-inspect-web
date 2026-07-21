@@ -10,12 +10,13 @@ import { Features } from "@/components/landing/features";
 import { Testimonials } from "@/components/landing/testimonials";
 import { Pricing } from "@/components/landing/pricing";
 import { FAQ } from "@/components/landing/faq";
+import { FinalCTA } from "@/components/landing/final-cta";
 import { Footer } from "@/components/landing/footer";
 
 type SearchParams = Promise<{ code?: string; redirect?: string }>;
 
 const homeDescription =
-  "Inspect elements, extract assets, pick colors, and analyze fonts. The all-in-one Chrome extension for designers and developers.";
+  "Copy AI element prompts for Cursor and Claude, inspect CSS for free, and unlock assets, colors, and fonts. The all-in-one Chrome extension for designers and developers.";
 
 const homeJsonLd = {
   "@context": "https://schema.org",
@@ -58,6 +59,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
         <Testimonials />
         <Pricing />
         <FAQ />
+        <FinalCTA />
         <Footer />
       </div>
     </div>

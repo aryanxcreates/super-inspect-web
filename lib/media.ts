@@ -2,4 +2,4 @@
 export const MEDIA_BASE_URL =
   "https://pub-766bdccd3f4e48f2b04a318cf84fcfc1.r2.dev/assets";
 
-export const VSL_VIDEO_URL = `${MEDIA_BASE_URL}/vsl%20v3.mp4`;
+export const VSL_VIDEO_URL = `${MEDIA_BASE_URL}/vsl-v4.mp4`;

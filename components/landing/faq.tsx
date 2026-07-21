@@ -6,24 +6,28 @@ import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
+    q: "Is Inspect really free forever?",
+    a: "Yes. After you sign in, the CSS Inspect tool stays free with no time limit. AI Prompt, Assets, Colors, and Fonts need a free 3-day trial or a Lifetime purchase.",
+  },
+  {
     q: "How does the free trial work?",
-    a: "You get full access to all InspectMode Pro features for 3 days — no credit card required. Just install the Chrome extension, create an account, and start inspecting. When your trial ends, you can upgrade to a paid plan to continue.",
+    a: "Create an account and start a 3-day Pro trial — no credit card required. You get AI Prompt, Assets, Colors, and Fonts for three days. When the trial ends, Inspect stays free; buy Lifetime to keep the Pro tools.",
+  },
+  {
+    q: "What is AI Element Copy Prompt?",
+    a: "Hover and click any element, then copy a structured prompt for Cursor, Claude, Gemini, Codex, or any coding agent so you can recreate that UI without digging through DevTools.",
+  },
+  {
+    q: "What's included in Lifetime?",
+    a: "A one-time $29 payment unlocks all Pro tools forever — AI Prompt, Assets, Colors, Fonts — plus future features, priority support, and up to 3 device activations. No monthly subscription.",
   },
   {
     q: "Can I use this on any website?",
-    a: "Yes! InspectMode Pro works on any website you visit in Chrome. It overlays a non-intrusive UI on top of the page, letting you inspect elements, grab colors, analyze fonts, and download assets from any site.",
-  },
-  {
-    q: "What's included in the Lifetime plan?",
-    a: "The Lifetime plan is a one-time $29 payment that gives you permanent access to all current and future features. No recurring charges, no subscription fatigue. You also get priority support and up to 3 device activations.",
+    a: "Yes. InspectMode Pro works on any site you visit in Chrome. It overlays a non-intrusive UI so you can inspect, copy prompts, grab colors, analyze fonts, and download assets.",
   },
   {
     q: "Is my data safe?",
-    a: "Absolutely. InspectMode Pro runs entirely in your browser. We don't collect, store, or transmit any data from the websites you inspect. Your browsing activity stays private.",
-  },
-  {
-    q: "Do I need to know CSS to use this?",
-    a: "Not at all! InspectMode Pro is designed for both designers and developers. The interface is clean and intuitive — just hover over elements and the extension shows you everything in plain language. You can copy any value with one click.",
+    a: "Absolutely. InspectMode Pro runs in your browser. We don't collect or transmit data from the websites you inspect. Your browsing activity stays private.",
   },
 ];
 

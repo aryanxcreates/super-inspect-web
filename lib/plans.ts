@@ -11,18 +11,21 @@ export interface PlanInfo {
 
 export const PLAN_INFO: Record<Plan, PlanInfo> = {
   free: {
-    name: "Free (no license)",
+    name: "Free",
     price: "$0",
-    priceDetail: "",
-    features: ["No active plan"],
+    priceDetail: "Inspect included",
+    features: [
+      "CSS Inspect tool (free forever)",
+      "Upgrade for AI Prompt, Assets, Colors & Fonts",
+    ],
   },
   trial: {
     name: "Free trial",
     price: "$0",
-    priceDetail: "Limited-time access",
+    priceDetail: "Limited-time Pro access",
     features: [
-      "All inspection tools",
-      "Copy CSS properties",
+      "Inspect + all Pro tools",
+      "AI Element Copy Prompt",
       "Download & copy assets",
       "Copy colors in HEX/RGB/HSL",
       "Copy font names & details",
@@ -30,13 +33,12 @@ export const PLAN_INFO: Record<Plan, PlanInfo> = {
     ],
   },
   subscription: {
-    name: "Subscription",
+    name: "Subscription (legacy)",
     price: "$9",
     priceDetail: "per month",
-    highlighted: true,
     features: [
-      "All inspection tools",
-      "Copy CSS properties",
+      "Inspect + all Pro tools",
+      "AI Element Copy Prompt",
       "Download & copy assets",
       "Copy colors in HEX/RGB/HSL",
       "Copy font names & details",
@@ -48,21 +50,34 @@ export const PLAN_INFO: Record<Plan, PlanInfo> = {
     price: "$29",
     priceDetail: "one-time payment",
     features: [
-      "All inspection tools",
+      "Inspect + all Pro tools forever",
+      "AI Element Copy Prompt",
       "Pay once, use forever",
       "All future features included",
       "No recurring charges",
       "Priority support",
+      "Up to 3 devices",
     ],
   },
 };
 
-export function hasAccess(plan: Plan, trialEndsAt?: Date | string | null): boolean {
+/** Pro tools: AI Prompt, Assets, Colors, Fonts. Legacy subscription still counts. */
+export function canUsePro(plan: Plan, trialEndsAt?: Date | string | null): boolean {
   if (plan === "subscription" || plan === "lifetime") return true;
   if (plan === "trial" && trialEndsAt) {
     return new Date(trialEndsAt) > new Date();
   }
   return false;
+}
+
+/** Inspect is free for any authenticated account (including free / expired trial). */
+export function canInspect(_plan?: Plan, _trialEndsAt?: Date | string | null): boolean {
+  return true;
+}
+
+/** @deprecated Prefer canUsePro — kept as alias for license activate/verify. */
+export function hasAccess(plan: Plan, trialEndsAt?: Date | string | null): boolean {
+  return canUsePro(plan, trialEndsAt);
 }
 
 export function getAccessReason(plan: Plan, trialEndsAt?: Date | string | null): AccessReason {

@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { PLAN_INFO, type Plan } from "@/lib/plans";
 import Link from "next/link";
-import { ArrowRight, Check, CreditCard, Crown, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Crown, Sparkles } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 
 export const metadata = { title: "Billing — InspectMode Pro" };
@@ -111,9 +111,9 @@ export default async function BillingPage() {
           </div>
           {!hasCustomerId && !isLifetime && (
             <p className="mt-4 rounded-xl bg-zinc-50 px-4 py-3 text-xs text-zinc-500">
-              After you subscribe or buy lifetime, you&apos;ll see a link here
-              to open Polar&apos;s customer portal (invoices, payment method,
-              cancel subscription).
+              After you buy Lifetime (or if you have a legacy subscription),
+              you&apos;ll see a link here to open Polar&apos;s customer portal
+              for invoices and payment method.
             </p>
           )}
         </div>
@@ -133,9 +133,9 @@ export default async function BillingPage() {
                     Start with a free trial
                   </h2>
                   <p className="mt-1 max-w-md text-sm text-blue-100/90">
-                    Full Pro access for the trial period. No credit card
-                    required — upgrade to monthly or lifetime when you&apos;re
-                    ready.
+                    Unlock AI Prompt, Assets, Colors, and Fonts for the trial
+                    period. No credit card required. Inspect stays free forever
+                    — upgrade to Lifetime when you&apos;re ready.
                   </p>
                 </div>
               </div>
@@ -178,147 +178,75 @@ export default async function BillingPage() {
         </section>
       )}
 
-      {/* Paid options: lifetime (featured) + subscription */}
+      {/* Lifetime upgrade */}
       {showPlanCards && !isLifetime && (
-        <section aria-label="Choose a plan" className="space-y-4">
+        <section aria-label="Lifetime access" className="space-y-4">
           <div className="rounded-2xl border border-zinc-200/80 bg-linear-to-b from-zinc-50/90 to-white p-4 shadow-sm sm:p-6">
-            <div className="grid gap-6 lg:grid-cols-12 lg:items-stretch lg:gap-0">
-              {(["lifetime", "subscription"] as Plan[]).map((planKey) => {
-                const plan = PLAN_INFO[planKey];
-                const isSubscriptionPlan = planKey === "subscription";
-                const productParam = isSubscriptionPlan
-                  ? process.env.NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRODUCT_ID
-                  : process.env.NEXT_PUBLIC_POLAR_LIFETIME_PRODUCT_ID;
-                const showAsCurrent = isSubscriptionPlan && isSubscription;
-                const checkoutHref = `/api/checkout?products=${productParam}&customerEmail=${encodeURIComponent(user!.email ?? "")}`;
+            {(() => {
+              const plan = PLAN_INFO.lifetime;
+              const productParam =
+                process.env.NEXT_PUBLIC_POLAR_LIFETIME_PRODUCT_ID;
+              const checkoutHref = `/api/checkout?products=${productParam}&customerEmail=${encodeURIComponent(user!.email ?? "")}`;
+              const ctaLabel = isSubscription
+                ? "Switch to lifetime"
+                : "Get lifetime access";
 
-                let ctaLabel: string;
-                let ctaHref: string | null;
-                if (showAsCurrent) {
-                  ctaLabel = "Current plan";
-                  ctaHref = null;
-                } else if (isSubscriptionPlan) {
-                  ctaLabel = "Subscribe monthly";
-                  ctaHref = checkoutHref;
-                } else {
-                  ctaLabel = isSubscription
-                    ? "Upgrade to lifetime"
-                    : "Get lifetime access";
-                  ctaHref = checkoutHref;
-                }
-
-                return (
-                  <div
-                    key={planKey}
-                    className={`flex min-h-0 flex-col lg:min-h-88 ${
-                      isSubscriptionPlan
-                        ? "lg:col-span-5 border-t border-zinc-200 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"
-                        : "lg:col-span-7 lg:pr-8"
-                    }`}
-                  >
-                    {isSubscriptionPlan ? (
-                      <div className="flex h-full flex-col rounded-2xl bg-linear-to-br from-blue-600 to-indigo-700 p-6 text-white shadow-md sm:p-7">
-                        <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/15">
-                          <CreditCard className="h-5 w-5" aria-hidden />
-                        </div>
-                        {showAsCurrent && (
-                          <span className="mb-2 inline-flex w-fit rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-blue-100">
-                            Current
-                          </span>
-                        )}
-                        <h3 className="text-xs font-semibold uppercase tracking-wide text-blue-200">
-                          {plan.name}
-                        </h3>
-                        <div className="mt-3 flex items-baseline gap-1">
-                          <span className="text-4xl font-bold">
-                            {plan.price}
-                          </span>
-                          <span className="text-sm text-blue-200">
-                            {plan.priceDetail}
-                          </span>
-                        </div>
-                        <ul className="mt-5 flex flex-1 flex-col gap-2.5">
-                          {plan.features.map((f) => (
-                            <li
-                              key={f}
-                              className="flex items-start gap-2 text-sm text-blue-50"
-                            >
-                              <Check
-                                className="mt-0.5 h-4 w-4 shrink-0 text-blue-200"
-                                aria-hidden
-                              />
-                              {f}
-                            </li>
-                          ))}
-                        </ul>
-                        {ctaHref ? (
-                          <Link
-                            href={ctaHref}
-                            className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-center text-sm font-semibold text-blue-700 transition hover:bg-blue-50"
-                          >
-                            {ctaLabel}
-                            <ArrowRight className="h-4 w-4" aria-hidden />
-                          </Link>
-                        ) : (
-                          <div className="mt-8 rounded-xl bg-white/15 py-3 text-center text-sm font-semibold text-blue-100">
-                            {ctaLabel}
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="relative flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border-2 border-amber-400/50 bg-linear-to-br from-amber-50/90 via-white to-amber-50/30 p-6 shadow-md sm:p-7">
-                        <span className="absolute right-4 top-4 rounded-full bg-linear-to-r from-amber-500 to-amber-600 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm">
-                          Best value
-                        </span>
-                        <div className="pointer-events-none absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-amber-200/40 blur-2xl" />
-                        <div className="relative flex flex-1 flex-col">
-                          <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 text-amber-800 ring-1 ring-amber-200/80">
-                            <Crown className="h-6 w-6" aria-hidden />
-                          </div>
-                          <h3 className="mt-5 text-xs font-semibold uppercase tracking-wide text-amber-900/80">
-                            {plan.name}
-                          </h3>
-                          <div className="mt-2 flex items-baseline gap-1">
-                            <span className="text-4xl font-bold text-zinc-900">
-                              {plan.price}
-                            </span>
-                            <span className="text-sm text-zinc-500">
-                              {plan.priceDetail}
-                            </span>
-                          </div>
-                          <ul className="mt-5 flex flex-1 flex-col gap-2.5">
-                            {plan.features.map((f) => (
-                              <li
-                                key={f}
-                                className="flex items-start gap-2 text-sm text-zinc-700"
-                              >
-                                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                                  <Check
-                                    className="h-3 w-3"
-                                    strokeWidth={3}
-                                    aria-hidden
-                                  />
-                                </span>
-                                {f}
-                              </li>
-                            ))}
-                          </ul>
-                          {ctaHref ? (
-                            <Link
-                              href={ctaHref}
-                              className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-zinc-800"
-                            >
-                              {ctaLabel}
-                              <ArrowRight className="h-4 w-4" aria-hidden />
-                            </Link>
-                          ) : null}
-                        </div>
-                      </div>
+              return (
+                <div className="relative mx-auto flex max-w-lg flex-col overflow-hidden rounded-2xl border-2 border-amber-400/50 bg-linear-to-br from-amber-50/90 via-white to-amber-50/30 p-6 shadow-md sm:p-8">
+                  <span className="absolute right-4 top-4 rounded-full bg-linear-to-r from-amber-500 to-amber-600 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm">
+                    Best value
+                  </span>
+                  <div className="pointer-events-none absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-amber-200/40 blur-2xl" />
+                  <div className="relative flex flex-1 flex-col">
+                    <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 text-amber-800 ring-1 ring-amber-200/80">
+                      <Crown className="h-6 w-6" aria-hidden />
+                    </div>
+                    <h3 className="mt-5 text-xs font-semibold uppercase tracking-wide text-amber-900/80">
+                      {plan.name}
+                    </h3>
+                    <div className="mt-2 flex items-baseline gap-1">
+                      <span className="text-4xl font-bold text-zinc-900">
+                        {plan.price}
+                      </span>
+                      <span className="text-sm text-zinc-500">
+                        {plan.priceDetail}
+                      </span>
+                    </div>
+                    {isSubscription && (
+                      <p className="mt-3 text-sm text-zinc-600">
+                        You&apos;re on a legacy monthly plan. Switch to Lifetime
+                        anytime — manage or cancel monthly billing in the
+                        customer portal above.
+                      </p>
                     )}
+                    <ul className="mt-5 flex flex-1 flex-col gap-2.5">
+                      {plan.features.map((f) => (
+                        <li
+                          key={f}
+                          className="flex items-start gap-2 text-sm text-zinc-700"
+                        >
+                          <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                            <Check
+                              className="h-3 w-3"
+                              strokeWidth={3}
+                              aria-hidden
+                            />
+                          </span>
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                    <Link
+                      href={checkoutHref}
+                      className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-zinc-800"
+                    >
+                      {ctaLabel}
+                      <ArrowRight className="h-4 w-4" aria-hidden />
+                    </Link>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })()}
           </div>
         </section>
       )}

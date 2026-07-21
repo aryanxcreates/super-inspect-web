@@ -85,8 +85,9 @@ export function Hero() {
           transition={{ ...bouncy, delay: 0.35 }}
           className="mt-6 text-base md:text-lg text-zinc-500 max-w-2xl mx-auto leading-relaxed px-1 sm:px-0"
         >
-          Inspect elements, extract assets, pick colors, and analyze fonts — all
-          from a sleek overlay right inside your browser. No context switching.
+          Copy AI-ready element prompts for Cursor and Claude, inspect CSS for
+          free, and unlock assets, colors, and fonts on a 3-day trial or Lifetime
+          — all from a sleek overlay in your browser.
         </motion.p>
 
         {/* CTAs */}
@@ -123,7 +124,8 @@ export function Hero() {
           transition={{ delay: 0.75, duration: 0.5 }}
           className="mt-4 text-xs text-zinc-400"
         >
-          Free 3-day trial &middot; No credit card required
+          Inspect free forever &middot; Free 3-day Pro trial &middot; No credit
+          card
         </motion.p>
 
         {/* VSL */}
@@ -136,7 +138,7 @@ export function Hero() {
           <div className="rounded-2xl shadow-[0_24px_70px_-18px_rgba(37,99,235,0.28),0_0_0_1px_rgba(15,23,42,0.04)]">
             <div
               ref={videoWrapRef}
-              className="overflow-hidden rounded-[calc(1rem-3px)] shadow-inner aspect-video relative"
+              className="overflow-hidden rounded-[calc(1rem-3px)] shadow-inner aspect-16/9.5 relative"
             >
               <video
                 ref={videoRef}

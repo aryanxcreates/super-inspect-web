@@ -156,7 +156,7 @@ export default async function DashboardPage({
                       </p>
                       <ul className="mt-5 space-y-2.5">
                         {[
-                          "All features unlocked permanently",
+                          "AI Prompt, Assets, Colors & Fonts forever",
                           "No monthly fees ever",
                           "Best price if you use Pro long-term",
                         ].map((line) => (
@@ -215,18 +215,19 @@ export default async function DashboardPage({
                               Free trial
                             </h3>
                             <p className="text-xs text-zinc-500">
-                              Full access · No card required
+                              Pro tools · No card required
                             </p>
                           </div>
                         </div>
                         <p className="mt-4 text-sm leading-relaxed text-zinc-600">
-                          Same Pro tools for a limited time. Upgrade to lifetime
-                          whenever you’re ready.
+                          AI Prompt, Assets, Colors, and Fonts for a limited
+                          time. Inspect stays free. Upgrade to Lifetime when
+                          you&apos;re ready.
                         </p>
                         <ul className="mt-4 space-y-2">
                           {[
-                            "All tools during trial",
-                            "Cancel before it ends",
+                            "All Pro tools during trial",
+                            "Inspect free forever",
                           ].map((line) => (
                             <li
                               key={line}
@@ -339,7 +340,8 @@ export default async function DashboardPage({
                 {trialDaysLeft !== 1 ? "s" : ""}
               </p>
               <p className="text-xs text-amber-800/90 mt-0.5">
-                Upgrade to keep using InspectMode Pro without interruption.
+                Buy Lifetime to keep AI Prompt, Assets, Colors, and Fonts.
+                Inspect stays free.
               </p>
             </div>
           </div>
@@ -347,7 +349,7 @@ export default async function DashboardPage({
             href="/dashboard/billing"
             className="shrink-0 rounded-xl bg-amber-600 px-5 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-amber-700"
           >
-            Upgrade now
+            Buy Lifetime
           </Link>
         </div>
       )}
@@ -363,7 +365,7 @@ export default async function DashboardPage({
                 Your trial has ended
               </p>
               <p className="text-xs text-red-800/90 mt-0.5">
-                Choose a plan to continue using InspectMode Pro.
+                Inspect stays free. Buy Lifetime to unlock Pro tools again.
               </p>
             </div>
           </div>
@@ -371,7 +373,7 @@ export default async function DashboardPage({
             href="/dashboard/billing"
             className="shrink-0 rounded-xl bg-red-600 px-5 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-red-700"
           >
-            View plans
+            Buy Lifetime
           </Link>
         </div>
       )}
@@ -425,7 +427,7 @@ export default async function DashboardPage({
                               : "bg-zinc-100 text-zinc-800"
                       }`}
                     >
-                      {plan === "free" ? "No plan" : plan}
+                      {plan === "free" ? "Free · Inspect" : plan}
                       {plan === "trial" &&
                         !isTrialExpired &&
                         ` · ${trialDaysLeft}d left`}

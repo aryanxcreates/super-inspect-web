@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { Check, Zap, Crown } from "lucide-react";
+import { Check, Crown, Sparkles } from "lucide-react";
 
 const plans = [
   {
@@ -12,18 +12,17 @@ const plans = [
     price: "$0",
     priceDetail: "3 days, no card required",
     features: [
-      "All inspection tools",
-      "Copy CSS properties",
+      "Inspect free forever (always)",
+      "AI Element Copy Prompt",
       "Download & copy assets",
-      "Copy colors in HEX/RGB/HSL",
-      "Copy font names & details",
-      "Eyedropper color picker",
+      "Colors + eyedropper",
+      "Font analysis",
+      "No credit card required",
     ],
     cta: "Start free trial",
     highlighted: false,
     href: "/signup",
-    icon: null,
-    urgency: null,
+    icon: Sparkles,
   },
   {
     key: "lifetime",
@@ -31,34 +30,17 @@ const plans = [
     price: "$29",
     priceDetail: "one-time",
     features: [
-      "All inspection tools",
+      "Everything in trial, forever",
+      "AI Element Copy Prompt",
       "Pay once, use forever",
       "All future features included",
       "No recurring charges",
-      "Priority support",
+      "Priority support · 3 devices",
     ],
     cta: "Buy lifetime",
     highlighted: true,
-    href: "/signup?plan=lifetime",
+    href: "/signup",
     icon: Crown,
-  },
-  {
-    key: "subscription",
-    name: "Pro Monthly",
-    price: "$9",
-    priceDetail: "/month",
-    features: [
-      "All inspection tools",
-      "Copy CSS properties",
-      "Download & copy assets",
-      "Copy colors in HEX/RGB/HSL",
-      "Copy font names & details",
-      "Eyedropper color picker",
-    ],
-    cta: "Subscribe now",
-    highlighted: false,
-    href: "/signup?plan=subscription",
-    icon: Zap,
   },
 ];
 
@@ -70,7 +52,7 @@ export function Pricing() {
 
   return (
     <section id="pricing" className="py-16 sm:py-24 md:py-32 bg-transparent">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 30 }}
@@ -82,14 +64,15 @@ export function Pricing() {
             Pricing
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-zinc-900 tracking-tight text-balance px-1">
-            Simple, transparent pricing
+            Try Pro free. Own it once.
           </h2>
           <p className="mt-5 text-zinc-500 max-w-lg mx-auto text-base sm:text-lg px-1">
-            Start with a free 3-day trial. Upgrade when you&apos;re ready.
+            Inspect is free forever. Start a 3-day Pro trial with no card — then
+            unlock everything with Lifetime.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
           {plans.map((plan, i) => (
             <PricingCard key={plan.key} plan={plan} index={i} />
           ))}
@@ -126,18 +109,6 @@ function PricingCard({
         <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-blue-500 text-white text-[11px] font-bold tracking-wide shadow-lg">
           Most Popular
         </div>
-      )}
-
-      {plan.urgency && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ ...bouncy, delay: index * 0.12 + 0.3 }}
-          className={`inline-flex items-center gap-1.5 self-start px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide mb-4 bg-red-50 text-red-600 border border-red-100"
-          }`}
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
-        </motion.div>
       )}
 
       <div className="flex items-center gap-2 mb-1">

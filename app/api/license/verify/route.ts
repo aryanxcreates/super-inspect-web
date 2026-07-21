@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { signToken } from "@/lib/jwt";
-import { hasAccess, getAccessReason } from "@/lib/plans";
+import { canInspect, canUsePro, getAccessReason } from "@/lib/plans";
 import { polarValidate } from "@/lib/polar-activations";
 import type { Plan } from "@/lib/plans";
 
@@ -11,7 +11,13 @@ export async function POST(request: NextRequest) {
 
     if (!licenseKey || typeof licenseKey !== "string") {
       return NextResponse.json(
-        { hasAccess: false, reason: "none", error: "Missing license key" },
+        {
+          hasAccess: false,
+          canInspect: false,
+          canUsePro: false,
+          reason: "none",
+          error: "Missing license key",
+        },
         { status: 400 }
       );
     }
@@ -22,16 +28,23 @@ export async function POST(request: NextRequest) {
     });
 
     if (!profile) {
-      return NextResponse.json({ hasAccess: false, reason: "none", error: "Invalid license key" });
+      return NextResponse.json({
+        hasAccess: false,
+        canInspect: false,
+        canUsePro: false,
+        reason: "none",
+        error: "Invalid license key",
+      });
     }
 
     const plan = profile.plan as Plan;
-    let access = hasAccess(plan, profile.trialEndsAt);
+    let pro = canUsePro(plan, profile.trialEndsAt);
+    const inspect = canInspect(plan, profile.trialEndsAt);
 
-    if (access && activationId && typeof activationId === "string") {
+    if (pro && activationId && typeof activationId === "string") {
       const { valid } = await polarValidate(licenseKey.trim(), activationId);
       if (!valid) {
-        access = false;
+        pro = false;
       }
     }
 
@@ -44,7 +57,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       accessToken,
-      hasAccess: access,
+      hasAccess: pro,
+      canInspect: inspect,
+      canUsePro: pro,
       reason,
       plan,
       email: profile.email,
@@ -52,7 +67,13 @@ export async function POST(request: NextRequest) {
     });
   } catch {
     return NextResponse.json(
-      { hasAccess: false, reason: "none", error: "Server error" },
+      {
+        hasAccess: false,
+        canInspect: false,
+        canUsePro: false,
+        reason: "none",
+        error: "Server error",
+      },
       { status: 500 }
     );
   }

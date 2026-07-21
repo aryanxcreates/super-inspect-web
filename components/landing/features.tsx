@@ -2,18 +2,28 @@
 
 import { motion, useInView } from "framer-motion";
 import { useEffect, useRef } from "react";
-import { Download, Palette, Type, Code } from "lucide-react";
+import { Download, Palette, Type, Code, Sparkles } from "lucide-react";
 import { MEDIA_BASE_URL } from "@/lib/media";
 
-/** Order matches videos: 1 = CSS inspect, 2 = assets, 3 = colors, 4 = fonts */
+/** Order: AI Prompt (5.mp4), then inspect/assets/colors/fonts (1–4.mp4) */
 const features = [
+  {
+    icon: Sparkles,
+    title: "AI Element Copy Prompt",
+    description:
+      "Select any element and copy a ready-made prompt for Cursor, Claude, Gemini, Codex, or any coding agent — recreate UI without fighting DevTools.",
+    color: "sky",
+    videoSrc: `${MEDIA_BASE_URL}/5.mp4`,
+    badge: "Pro" as const,
+  },
   {
     icon: Code,
     title: "Advanced CSS Inspector",
     description:
-      "Hover any element to see CSS properties, spacing, dimensions, and typography in a beautiful HUD overlay. Copy any property instantly.",
+      "Hover any element to see CSS properties, spacing, dimensions, and typography in a beautiful HUD overlay. Free forever for every account.",
     color: "blue",
     videoSrc: `${MEDIA_BASE_URL}/1.mp4`,
+    badge: "Free" as const,
   },
   {
     icon: Download,
@@ -22,6 +32,7 @@ const features = [
       "Find every image, SVG, video, and background asset on the page. Preview, copy, and download in one click — no more digging through DevTools.",
     color: "emerald",
     videoSrc: `${MEDIA_BASE_URL}/2.mp4`,
+    badge: "Pro" as const,
   },
   {
     icon: Palette,
@@ -30,6 +41,7 @@ const features = [
       "Extract every color used on the page. Switch between HEX, RGB, and HSL with a click. Pick any color with the built-in eyedropper.",
     color: "violet",
     videoSrc: `${MEDIA_BASE_URL}/3.mp4`,
+    badge: "Pro" as const,
   },
   {
     icon: Type,
@@ -38,11 +50,17 @@ const features = [
       "See all fonts, weights, and sizes used on the page with live previews. Copy font names and full CSS stacks instantly.",
     color: "amber",
     videoSrc: `${MEDIA_BASE_URL}/4.mp4`,
+    badge: "Pro" as const,
   },
 ];
 
 const colorMap: Record<string, { bg: string; text: string; gradient: string }> =
   {
+    sky: {
+      bg: "bg-sky-100",
+      text: "text-sky-600",
+      gradient: "from-sky-50 to-sky-100/50",
+    },
     emerald: {
       bg: "bg-emerald-100",
       text: "text-emerald-600",
@@ -103,22 +121,31 @@ function FeatureRow({
       }}
       className={`flex flex-col ${isReversed ? "md:flex-row-reverse" : "md:flex-row"} items-center gap-8 sm:gap-10 md:gap-16`}
     >
-      {/* Text */}
       <div className="flex-1 text-center md:text-left">
-        <div
-          className={`inline-flex w-12 h-12 rounded-2xl items-center justify-center mb-5 ${colors.bg} ${colors.text}`}
-        >
-          <feature.icon size={24} />
+        <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-5">
+          <div
+            className={`inline-flex w-12 h-12 rounded-2xl items-center justify-center ${colors.bg} ${colors.text}`}
+          >
+            <feature.icon size={24} />
+          </div>
+          <span
+            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+              feature.badge === "Free"
+                ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
+                : "bg-blue-50 text-blue-700 border border-blue-100"
+            }`}
+          >
+            {feature.badge}
+          </span>
         </div>
         <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-zinc-900 tracking-tight text-balance">
           {feature.title}
         </h3>
-        <p className="mt-4 text-zinc-500 leading-relaxed max-w-md">
+        <p className="mt-4 text-zinc-500 leading-relaxed max-w-md mx-auto md:mx-0">
           {feature.description}
         </p>
       </div>
 
-      {/* Demo video card */}
       <div className="flex-1 w-full">
         <motion.div
           whileHover={{ y: -4, scale: 1.01 }}
@@ -127,7 +154,7 @@ function FeatureRow({
         >
           <div
             ref={videoWrapRef}
-            className="aspect-video relative bg-zinc-900/5"
+            className="aspect-16/9.5 relative bg-zinc-900/5"
           >
             <video
               ref={videoRef}
@@ -164,12 +191,13 @@ export function Features() {
             Features
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-zinc-900 tracking-tight text-balance px-1">
-            Everything you need to
-            <br className="hidden sm:block" /> inspect the web
+            Inspect free. Pro tools
+            <br className="hidden sm:block" /> when you need them
           </h2>
           <p className="mt-5 text-zinc-500 max-w-xl mx-auto text-base sm:text-lg px-1">
-            Four powerful tools in one lightweight extension. No clutter, just
-            what you need.
+            Five tools in one lightweight extension — CSS Inspect stays free
+            forever; AI Prompt, Assets, Colors, and Fonts unlock on trial or
+            Lifetime.
           </p>
         </motion.div>
 

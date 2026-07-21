@@ -120,7 +120,7 @@ export function ActiveDevices() {
 
       {maxDevices === 0 ? (
         <p className="text-sm text-zinc-400">
-          Start a trial or subscribe to activate devices with your license key.
+          Start a trial or buy Lifetime to activate devices with your license key.
         </p>
       ) : (
         <>
@@ -171,8 +171,8 @@ export function ActiveDevices() {
 
           {!canDeactivate && count === 1 && (
             <p className="text-xs text-zinc-500">
-              Trial and Subscription are limited to one device. Upgrade to
-              Lifetime to use up to 3 devices and manage them here.
+              Trial and legacy subscriptions are limited to one device. Upgrade
+              to Lifetime to use up to 3 devices and manage them here.
             </p>
           )}
           {canDeactivate && count < maxDevices && (

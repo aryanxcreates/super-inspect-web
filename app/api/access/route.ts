@@ -1,7 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { verifyToken } from "@/lib/jwt";
 import { prisma } from "@/lib/prisma";
-import { getAccessReason, hasAccess } from "@/lib/plans";
+import {
+  canInspect,
+  canUsePro,
+  getAccessReason,
+} from "@/lib/plans";
 import type { Plan } from "@/lib/plans";
 import { handleCorsOptions, withCors } from "@/lib/cors";
 
@@ -15,7 +19,13 @@ export async function GET(request: NextRequest) {
     if (!authHeader?.startsWith("Bearer ")) {
       return withCors(
         NextResponse.json(
-        { hasAccess: false, reason: "none", error: "Missing token" },
+          {
+            hasAccess: false,
+            canInspect: false,
+            canUsePro: false,
+            reason: "none",
+            error: "Missing token",
+          },
           { status: 401 }
         )
       );
@@ -26,7 +36,13 @@ export async function GET(request: NextRequest) {
     if (!payload) {
       return withCors(
         NextResponse.json(
-        { hasAccess: false, reason: "none", error: "Invalid token" },
+          {
+            hasAccess: false,
+            canInspect: false,
+            canUsePro: false,
+            reason: "none",
+            error: "Invalid token",
+          },
           { status: 401 }
         )
       );
@@ -38,16 +54,26 @@ export async function GET(request: NextRequest) {
     });
 
     if (!profile) {
-      return withCors(NextResponse.json({ hasAccess: false, reason: "none" }));
+      return withCors(
+        NextResponse.json({
+          hasAccess: false,
+          canInspect: false,
+          canUsePro: false,
+          reason: "none",
+        })
+      );
     }
 
     const plan = profile.plan as Plan;
-    const access = hasAccess(plan, profile.trialEndsAt);
+    const pro = canUsePro(plan, profile.trialEndsAt);
+    const inspect = canInspect(plan, profile.trialEndsAt);
     const reason = getAccessReason(plan, profile.trialEndsAt);
 
     return withCors(
       NextResponse.json({
-        hasAccess: access,
+        hasAccess: pro,
+        canInspect: inspect,
+        canUsePro: pro,
         reason,
         plan,
         email: profile.email,
@@ -58,7 +84,13 @@ export async function GET(request: NextRequest) {
   } catch {
     return withCors(
       NextResponse.json(
-        { hasAccess: false, reason: "none", error: "Server error" },
+        {
+          hasAccess: false,
+          canInspect: false,
+          canUsePro: false,
+          reason: "none",
+          error: "Server error",
+        },
         { status: 500 }
       )
     );
