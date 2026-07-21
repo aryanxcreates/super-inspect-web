@@ -43,7 +43,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden pt-36 pb-10 md:pt-44 md:pb-10">
+    <section className="relative overflow-hidden pt-36 pb-10 md:pt-42 md:pb-10">
       {/* Hero-only spotlight — page background handles grid + base wash */}
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
         <div className="absolute inset-0 bg-radial-[ellipse_95%_70%_at_50%_20%] from-blue-500/6 via-transparent to-transparent" />
@@ -55,7 +55,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ ...bouncy, delay: 0.1 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-xs font-medium mb-8"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-600 text-xs font-medium mb-4"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
           The new standard for developers &amp; designers
@@ -66,7 +66,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...bouncy, delay: 0.2 }}
-          className="text-4xl sm:text-5xl md:text-7xl font-semibold text-zinc-800 tracking-tight leading-[1.08] text-balance"
+          className="text-4xl sm:text-5xl md:text-7xl font-semibold text-zinc-800 tracking-tight  text-balance"
         >
           Your all-in-one
           <br />
@@ -86,8 +86,8 @@ export function Hero() {
           className="mt-6 text-base md:text-lg text-zinc-500 max-w-2xl mx-auto leading-relaxed px-1 sm:px-0"
         >
           Copy AI-ready element prompts for Cursor and Claude, inspect CSS for
-          free, and unlock assets, colors, and fonts on a 3-day trial or Lifetime
-          — all from a sleek overlay in your browser.
+          free, and unlock assets, colors, and fonts—all from a sleek overlay in
+          your browser.
         </motion.p>
 
         {/* CTAs */}
@@ -95,7 +95,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...bouncy, delay: 0.55 }}
-          className="mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 w-full max-w-md sm:max-w-none mx-auto sm:mx-0 sm:w-auto"
+          className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 w-full max-w-md sm:max-w-none mx-auto sm:mx-0 sm:w-auto"
         >
           <a
             href={CHROME_WEB_STORE_URL}
@@ -118,15 +118,42 @@ export function Hero() {
           </a>
         </motion.div>
 
-        <motion.p
+        <motion.a
+          href={CHROME_WEB_STORE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
+          className="mt-4 inline-flex items-center gap-2 text-xs text-zinc-500 transition-colors hover:text-zinc-700"
+          aria-label="Rated 5 stars on the Chrome Web Store"
+        >
+          <span className="text-amber-400 text-xl tracking-wider" aria-hidden="true">
+            ★★★★★
+          </span>
+          <span className="font-medium">5.0 on the Chrome Web Store</span>
+        </motion.a>
+
+        <motion.ul
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.75, duration: 0.5 }}
-          className="mt-4 text-xs text-zinc-400"
+          className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-zinc-500"
         >
-          Inspect free forever &middot; Free 3-day Pro trial &middot; No credit
-          card
-        </motion.p>
+          {["Inspect free forever", "Free 3-day Pro trial", "No credit card"].map(
+            (benefit) => (
+              <li key={benefit} className="inline-flex items-center gap-1.5">
+                <span
+                  className="grid size-4 place-items-center rounded-full bg-emerald-50 text-[10px] font-bold text-emerald-600"
+                  aria-hidden="true"
+                >
+                  ✓
+                </span>
+                {benefit}
+              </li>
+            ),
+          )}
+        </motion.ul>
 
         {/* VSL */}
         <motion.div
