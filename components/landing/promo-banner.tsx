@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { Check, Copy, Gift } from "lucide-react";
 
-const PROMO_CODE = "GETFREE";
+const PROMO_CODE = "INSPECT9";
 
 export function PromoBanner() {
   const [copied, setCopied] = useState(false);
@@ -43,7 +43,7 @@ export function PromoBanner() {
         <span className="inline-flex items-center gap-2 text-[13px] sm:text-sm font-medium tracking-tight">
           <Gift className="size-3.5 shrink-0 opacity-90" aria-hidden />
           <span>
-            Lifetime access — free for a limited time
+            Lifetime deal — just $9. Use this coupon at checkout
           </span>
         </span>
 
@@ -56,7 +56,7 @@ export function PromoBanner() {
           aria-label={copied ? "Code copied" : `Copy code ${PROMO_CODE}`}
         >
           <span className="text-white/75 font-normal">Code</span>
-          <span className="font-semibold tracking-[0.12em]">{PROMO_CODE}</span>
+          <span className="text-sm font-semibold tracking-[0.12em]">{PROMO_CODE}</span>
           {copied ? (
             <Check className="size-3.5 text-emerald-200" aria-hidden />
           ) : (
