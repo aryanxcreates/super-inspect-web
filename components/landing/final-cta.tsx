@@ -8,68 +8,79 @@ import {
   CHROME_WEB_STORE_URL,
 } from "@/lib/chrome-web-store";
 
-const bouncy = { type: "spring" as const, stiffness: 200, damping: 25 };
+const spring = { type: "spring" as const, stiffness: 200, damping: 26 };
 
 export function FinalCTA() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section className="relative py-16 sm:py-24 md:py-28 overflow-hidden">
-      <div
-        className="pointer-events-none absolute inset-0 -z-10"
-        aria-hidden
-      >
-        <div className="absolute inset-0 bg-linear-to-b from-transparent via-blue-500/5 to-indigo-500/8" />
-        <div className="absolute left-1/2 top-1/2 h-[420px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-400/10 blur-3xl" />
-      </div>
+    <section className="relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 md:py-20">
+      <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2rem] bg-slate-950 px-6 py-10 text-center sm:px-10 sm:py-12 md:py-14">
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden
+          style={{
+            backgroundImage:
+              "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(37,99,235,0.45), transparent 55%), radial-gradient(ellipse 50% 40% at 100% 100%, rgba(14,165,233,0.2), transparent 50%)",
+          }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-30"
+          aria-hidden
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px), linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+            maskImage:
+              "radial-gradient(ellipse 70% 70% at 50% 40%, black, transparent)",
+          }}
+        />
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 36 }}
+          initial={{ opacity: 0, y: 28 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={bouncy}
+          transition={spring}
+          className="relative z-10"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-zinc-900 tracking-tight text-balance">
-            Copy the element. Prompt your agent.
+          <p className="font-display text-lg font-semibold text-sky-300 sm:text-xl">
+            InspectMode <span className="text-white">Pro</span>
+          </p>
+          <h2 className="font-display mx-auto mt-4 max-w-2xl text-3xl font-bold tracking-tight text-white text-balance sm:text-4xl md:text-5xl">
+            Ship faster with the UI in front of you.
           </h2>
-          <p className="mt-5 text-zinc-500 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
-            Install InspectMode Pro — Inspect stays free forever. Start a 3-day
-            Pro trial for AI Prompt and the rest, or buy Lifetime once.
+          <p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-slate-300 sm:text-lg">
+            Install free. Try Pro for 3 days. Or own Lifetime for $9.
           </p>
 
-          <div className="mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
+          <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
             <a
               href={CHROME_WEB_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-blue-600 text-white text-sm font-semibold shadow-lg shadow-blue-500/30 transition-all duration-200 hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-500/40 hover:-translate-y-0.5"
+              className="group inline-flex items-center justify-center gap-2.5 rounded-2xl bg-blue-500 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/30 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-400"
             >
               <img
                 src={CHROME_LOGO_ICON_URL}
                 alt=""
                 width={20}
                 height={20}
-                className="w-5 h-5 shrink-0 drop-shadow-sm"
+                className="size-5 shrink-0 drop-shadow-sm"
                 decoding="async"
               />
               Install Chrome Extension
-              <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5">
+              <span className="transition-transform duration-200 group-hover:translate-x-0.5">
                 &rarr;
               </span>
             </a>
             <Link
               href="/signup"
-              className="inline-flex items-center justify-center px-8 py-3.5 rounded-xl border border-zinc-200 bg-white text-zinc-800 text-sm font-semibold shadow-sm transition-all duration-200 hover:border-blue-200 hover:bg-blue-50/50 hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/10"
             >
-              Start free trial
+              Start free
             </Link>
           </div>
-
-          <p className="mt-5 text-xs text-zinc-400">
-            No credit card for trial &middot; Lifetime $29 one-time
-          </p>
         </motion.div>
       </div>
     </section>

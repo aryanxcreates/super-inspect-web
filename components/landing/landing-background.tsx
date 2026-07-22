@@ -1,5 +1,6 @@
 /**
- * Full-page ambient background: light grid + soft blue shadows for the marketing home.
+ * Full-page ambient background for the marketing home.
+ * Cool slate wash + soft blue depth — no flat white slab.
  */
 export function LandingBackground() {
   return (
@@ -7,52 +8,37 @@ export function LandingBackground() {
       className="pointer-events-none absolute inset-0 z-0 min-h-full overflow-hidden"
       aria-hidden
     >
-      {/* Base wash — cool white, barely blue (continuous down the page) */}
-      <div className="absolute inset-0 bg-linear-to-b from-slate-50/90 via-white to-slate-50/50" />
+      <div className="absolute inset-0 bg-[#f4f7fb]" />
+      <div className="absolute inset-0 bg-linear-to-b from-blue-50/80 via-transparent to-slate-100/40" />
 
-      {/* Primary grid — long vertical fade avoids a visible horizontal “cut” */}
+      {/* Fine technical grid */}
       <div
-        className="absolute inset-0 opacity-[0.85]"
+        className="absolute inset-0 opacity-[0.55]"
         style={{
           backgroundImage: `
-            linear-gradient(to right, rgb(148 163 184 / 0.14) 1px, transparent 1px),
-            linear-gradient(to bottom, rgb(148 163 184 / 0.14) 1px, transparent 1px)
+            linear-gradient(to right, rgb(148 163 184 / 0.16) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(148 163 184 / 0.16) 1px, transparent 1px)
           `,
-          backgroundSize: "40px 40px",
+          backgroundSize: "56px 56px",
           maskImage:
-            "linear-gradient(to bottom, black 0%, rgba(0,0,0,0.92) 18%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.18) 72%, transparent 92%)",
+            "radial-gradient(ellipse 90% 70% at 50% 0%, black 0%, rgba(0,0,0,0.55) 45%, transparent 78%)",
         }}
       />
 
-      {/* Accent grid — matches fade; wide ellipse only softens left/right edges */}
-      <div
-        className="absolute inset-0 opacity-40"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, rgb(59 130 246 / 0.07) 1px, transparent 1px),
-            linear-gradient(to bottom, rgb(99 102 241 / 0.06) 1px, transparent 1px)
-          `,
-          backgroundSize: "80px 80px",
-          backgroundPosition: "20px 20px",
-          maskImage:
-            "linear-gradient(to bottom, black 0%, rgba(0,0,0,0.78) 24%, rgba(0,0,0,0.32) 52%, rgba(0,0,0,0.08) 78%, transparent 96%)",
-        }}
-      />
+      {/* Horizon glow */}
+      <div className="absolute inset-x-0 top-0 h-[min(70vh,640px)] bg-linear-to-b from-sky-200/30 via-blue-100/15 to-transparent" />
 
-      {/* Top highlight — soft blue “sky” */}
-      <div className="absolute inset-x-0 top-0 h-[min(55vh,520px)] bg-linear-to-b from-blue-100/35 via-indigo-50/15 to-transparent" />
-
-      {/* Soft shadow orbs */}
-      <div className="absolute -top-32 left-1/2 h-[520px] w-[min(110vw,980px)] -translate-x-1/2 rounded-[100%] bg-linear-to-br from-blue-400/25 via-sky-200/20 to-transparent blur-3xl" />
+      {/* Soft depth orbs */}
+      <div className="absolute -top-24 left-1/2 h-[560px] w-[min(120vw,1100px)] -translate-x-1/2 rounded-[100%] bg-linear-to-br from-blue-400/20 via-sky-300/12 to-transparent blur-3xl" />
       <div
-        className="absolute top-[18%] right-[-8%] h-[380px] w-[380px] rounded-full bg-indigo-400/12 blur-[100px] animate-pulse-soft"
-        style={{ animationDelay: "0.5s" }}
+        className="absolute top-[22%] right-[-10%] h-[420px] w-[420px] rounded-full bg-sky-400/12 blur-[110px] animate-pulse-soft"
+        style={{ animationDelay: "0.6s" }}
       />
       <div
-        className="absolute top-[42%] left-[-12%] h-[320px] w-[320px] rounded-full bg-sky-300/14 blur-[90px] animate-pulse-soft"
-        style={{ animationDelay: "1.8s" }}
+        className="absolute top-[48%] left-[-14%] h-[360px] w-[360px] rounded-full bg-blue-500/10 blur-[100px] animate-pulse-soft"
+        style={{ animationDelay: "1.9s" }}
       />
-      <div className="absolute bottom-0 left-1/2 h-[280px] w-[min(90vw,720px)] -translate-x-1/2 translate-y-1/3 rounded-[100%] bg-linear-to-t from-blue-200/18 via-indigo-100/8 to-transparent blur-3xl" />
+      <div className="absolute bottom-[8%] left-1/2 h-[300px] w-[min(90vw,760px)] -translate-x-1/2 rounded-[100%] bg-blue-300/10 blur-3xl" />
     </div>
   );
 }

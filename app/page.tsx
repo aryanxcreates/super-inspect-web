@@ -3,7 +3,6 @@ import { createClient } from "@/lib/supabase/server";
 import { CHROME_WEB_STORE_URL } from "@/lib/chrome-web-store";
 import { getSiteUrl } from "@/lib/site-url";
 import { LandingBackground } from "@/components/landing/landing-background";
-import { PromoBanner } from "@/components/landing/promo-banner";
 import { Navbar } from "@/components/landing/navbar";
 import { Hero } from "@/components/landing/hero";
 import { Features } from "@/components/landing/features";
@@ -51,7 +50,6 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
       <LandingBackground />
       <div className="relative z-10">
         <div className="fixed top-0 left-0 right-0 z-50">
-          <PromoBanner />
           <Navbar initialLoggedIn={!!user} />
         </div>
         <Hero />

@@ -47,7 +47,7 @@ export const PLAN_INFO: Record<Plan, PlanInfo> = {
   },
   lifetime: {
     name: "Lifetime",
-    price: "$29",
+    price: "$9",
     priceDetail: "one-time payment",
     features: [
       "Inspect + all Pro tools forever",

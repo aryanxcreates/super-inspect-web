@@ -2,16 +2,16 @@
 
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { Plus } from "lucide-react";
 
 const faqs = [
   {
     q: "Is Inspect really free forever?",
-    a: "Yes. After you sign in, the CSS Inspect tool stays free with no time limit. AI Prompt, Assets, Colors, and Fonts need a free 3-day trial or a Lifetime purchase.",
+    a: "Yes. After you sign in, the CSS Inspect tool stays free with no time limit. AI Prompt, Assets, Colors, and Fonts need Free (3 days) or a Lifetime purchase.",
   },
   {
-    q: "How does the free trial work?",
-    a: "Create an account and start a 3-day Pro trial — no credit card required. You get AI Prompt, Assets, Colors, and Fonts for three days. When the trial ends, Inspect stays free; buy Lifetime to keep the Pro tools.",
+    q: "How does Free work?",
+    a: "Create an account and start free — no credit card required. You get full Pro access (AI Prompt, Assets, Colors, and Fonts) for three days. When that ends, Inspect stays free; buy Lifetime to keep the Pro tools.",
   },
   {
     q: "What is AI Element Copy Prompt?",
@@ -19,7 +19,7 @@ const faqs = [
   },
   {
     q: "What's included in Lifetime?",
-    a: "A one-time $29 payment unlocks all Pro tools forever — AI Prompt, Assets, Colors, Fonts — plus future features, priority support, and up to 3 device activations. No monthly subscription.",
+    a: "A one-time $9 payment unlocks all Pro tools forever — AI Prompt, Assets, Colors, Fonts — plus future features, priority support, and up to 3 device activations. No monthly subscription.",
   },
   {
     q: "Can I use this on any website?",
@@ -31,36 +31,36 @@ const faqs = [
   },
 ];
 
-const bouncy = { type: "spring" as const, stiffness: 200, damping: 25 };
+const spring = { type: "spring" as const, stiffness: 200, damping: 26 };
 
 export function FAQ() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="faq" className="py-16 sm:py-24 md:py-32 bg-transparent">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+    <section id="faq" className="relative py-12 sm:py-16 md:py-20">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 28 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={bouncy}
-          className="text-center mb-10 sm:mb-14"
+          transition={spring}
+          className="mb-8 text-center sm:mb-10"
         >
-          <span className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-medium border border-blue-100 mb-4">
+          <p className="mb-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">
             FAQ
-          </span>
-          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-zinc-900 tracking-tight text-balance px-1">
-            Frequently asked questions
+          </p>
+          <h2 className="font-display text-3xl font-bold tracking-tight text-slate-900 text-balance sm:text-4xl md:text-5xl">
+            Questions, answered
           </h2>
-          <p className="mt-5 text-zinc-500 text-base sm:text-lg px-1">
+          <p className="mt-3 text-base text-slate-500 sm:mt-4 sm:text-lg">
             Everything you need to know about InspectMode Pro.
           </p>
         </motion.div>
 
-        <div className="flex flex-col gap-3">
+        <div className="divide-y divide-slate-200 border-y border-slate-200">
           {faqs.map((faq, i) => (
-            <FAQItem key={i} faq={faq} index={i} />
+            <FAQItem key={faq.q} faq={faq} index={i} />
           ))}
         </div>
       </div>
@@ -76,24 +76,34 @@ function FAQItem({ faq, index }: { faq: (typeof faqs)[0]; index: number }) {
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ ...bouncy, delay: index * 0.08 }}
-      className="rounded-2xl border border-zinc-100 bg-white overflow-hidden transition-colors hover:border-blue-100"
+      transition={{ ...spring, delay: index * 0.05 }}
     >
       <button
+        type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-between w-full gap-3 px-4 sm:px-6 py-4 sm:py-5 text-left min-w-0"
+        className="flex w-full min-w-0 items-center justify-between gap-4 py-4 text-left sm:py-5"
+        aria-expanded={open}
       >
-        <span className="text-sm sm:text-base font-semibold text-zinc-900 pr-2 min-w-0 text-balance">
+        <span className="min-w-0 pr-2 text-sm font-semibold text-slate-900 text-balance sm:text-base">
           {faq.q}
         </span>
-        <motion.div
-          animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
+        <span
+          className={`grid size-8 shrink-0 place-items-center rounded-full border transition-colors ${
+            open
+              ? "border-blue-600 bg-blue-600 text-white"
+              : "border-slate-200 bg-white text-slate-500"
+          }`}
         >
-          <ChevronDown size={18} className="text-zinc-400 shrink-0" />
-        </motion.div>
+          <motion.span
+            animate={{ rotate: open ? 45 : 0 }}
+            transition={{ duration: 0.2 }}
+            className="grid place-items-center"
+          >
+            <Plus size={16} />
+          </motion.span>
+        </span>
       </button>
 
       <AnimatePresence initial={false}>
@@ -105,9 +115,9 @@ function FAQItem({ faq, index }: { faq: (typeof faqs)[0]; index: number }) {
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="px-4 sm:px-6 pb-4 sm:pb-5 text-sm text-zinc-500 leading-relaxed">
+            <p className="pb-5 text-sm leading-relaxed text-slate-500 sm:pb-6">
               {faq.a}
-            </div>
+            </p>
           </motion.div>
         )}
       </AnimatePresence>

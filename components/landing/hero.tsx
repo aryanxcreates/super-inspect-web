@@ -43,7 +43,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden pt-36 pb-10 md:pt-42 md:pb-10">
+    <section className="relative overflow-hidden pt-28 pb-10 md:pt-38 md:pb-10">
       {/* Hero-only spotlight — page background handles grid + base wash */}
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
         <div className="absolute inset-0 bg-radial-[ellipse_95%_70%_at_50%_20%] from-blue-500/6 via-transparent to-transparent" />
@@ -51,7 +51,7 @@ export function Hero() {
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
         {/* Badge */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ ...bouncy, delay: 0.1 }}
@@ -59,14 +59,14 @@ export function Hero() {
         >
           <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
           The new standard for developers &amp; designers
-        </motion.div>
+        </motion.div> */}
 
         {/* Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...bouncy, delay: 0.2 }}
-          className="text-4xl sm:text-5xl md:text-7xl font-semibold text-zinc-800 tracking-tight  text-balance"
+          className="text-4xl sm:text-5xl md:text-7xl font-semibold text-zinc-800 tracking-tight text-balance"
         >
           Your all-in-one
           <br />
@@ -140,7 +140,7 @@ export function Hero() {
           transition={{ delay: 0.75, duration: 0.5 }}
           className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-zinc-500"
         >
-          {["Inspect free forever", "Free 3-day Pro trial", "No credit card"].map(
+          {["Inspect free forever", "Free 3-day Pro", "No credit card"].map(
             (benefit) => (
               <li key={benefit} className="inline-flex items-center gap-1.5">
                 <span
@@ -160,7 +160,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...bouncy, delay: 0.42 }}
-          className="mt-10 sm:mt-12 w-full max-w-4xl mx-auto"
+          className="mt-10 sm:mt-12 w-full max-w-5xl mx-auto"
         >
           <div className="rounded-2xl shadow-[0_24px_70px_-18px_rgba(37,99,235,0.28),0_0_0_1px_rgba(15,23,42,0.04)]">
             <div

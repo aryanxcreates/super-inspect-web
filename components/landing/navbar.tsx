@@ -8,8 +8,8 @@ import { createClient } from "@/lib/supabase/client";
 
 const navLinks = [
   { href: "#features", label: "Features" },
+  { href: "#testimonials", label: "Reviews" },
   { href: "#pricing", label: "Pricing" },
-  { href: "#testimonials", label: "Testimonials" },
   { href: "#faq", label: "FAQ" },
 ] as const;
 
@@ -36,7 +36,7 @@ export function Navbar({ initialLoggedIn = false }: NavbarProps) {
   }, []);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
+    const onScroll = () => setScrolled(window.scrollY > 12);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -54,53 +54,53 @@ export function Navbar({ initialLoggedIn = false }: NavbarProps) {
 
   return (
     <motion.nav
-      initial={{ y: -20, opacity: 0 }}
+      initial={{ y: -16, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
       className={`transition-all duration-300 ${
         scrolled || menuOpen
-          ? "bg-white/50 backdrop-blur-xl border-b border-zinc-100 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
-          : "bg-transparent"
+          ? "border-b border-slate-200/70 bg-white/70 shadow-[0_8px_30px_-18px_rgba(15,23,42,0.18)] backdrop-blur-xl"
+          : "border-b border-transparent bg-transparent"
       }`}
     >
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-3">
+      <div className="relative mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6">
         <Link
           href="/"
-          className="text-base sm:text-lg font-bold text-zinc-900 flex items-center gap-2 min-w-0 shrink"
+          className="flex min-w-0 shrink items-center gap-2.5 text-base font-semibold tracking-tight text-slate-900 sm:text-lg"
           onClick={() => setMenuOpen(false)}
         >
-          <div className="bg-blue-600 rounded-lg p-1.5 shrink-0">
-            <SquareMousePointer className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-          </div>
-          <span className="truncate">
+          <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-blue-600 shadow-sm shadow-blue-600/30 sm:size-9">
+            <SquareMousePointer className="size-4 text-white sm:size-5" />
+          </span>
+          <span className="font-display truncate">
             InspectMode <span className="text-blue-600">Pro</span>
           </span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-8 text-sm text-zinc-700 -ml-24">
+        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 rounded-full border border-slate-200/80 bg-white/60 p-1 text-sm text-slate-600 shadow-sm backdrop-blur-md md:flex">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="hover:text-zinc-900 transition-colors"
+              className="rounded-full px-3.5 py-1.5 transition-colors hover:bg-slate-900 hover:text-white"
             >
               {link.label}
             </a>
           ))}
         </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-2.5">
           {!loggedIn && (
             <Link
               href="/login"
-              className="hidden sm:inline-flex px-2.5 sm:px-4 py-2 text-sm text-zinc-600 hover:text-zinc-900 font-medium transition-colors"
+              className="hidden px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 sm:inline-flex"
             >
               Log in
             </Link>
           )}
           <Link
             href={loggedIn ? "/dashboard" : "/signup"}
-            className="px-3 sm:px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5 whitespace-nowrap"
+            className="whitespace-nowrap rounded-xl bg-slate-900 px-3.5 py-2 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-lg hover:shadow-slate-900/20 sm:px-4"
             onClick={() => setMenuOpen(false)}
           >
             {loggedIn ? "Dashboard" : "Get started"}
@@ -109,14 +109,10 @@ export function Navbar({ initialLoggedIn = false }: NavbarProps) {
             type="button"
             aria-expanded={menuOpen}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
-            className="md:hidden inline-flex items-center justify-center rounded-lg p-2 text-zinc-700 hover:bg-zinc-100 transition-colors"
+            className="inline-flex items-center justify-center rounded-xl p-2 text-slate-700 transition-colors hover:bg-slate-100 md:hidden"
             onClick={() => setMenuOpen((o) => !o)}
           >
-            {menuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
+            {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
         </div>
       </div>
@@ -129,21 +125,21 @@ export function Navbar({ initialLoggedIn = false }: NavbarProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden fixed inset-0 z-40 top-[6rem] sm:top-[6.5rem] flex flex-col pointer-events-none"
+            className="pointer-events-none fixed inset-0 top-14 z-40 flex flex-col sm:top-16 md:hidden"
           >
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="pointer-events-auto shrink-0 border-b border-zinc-100 bg-white/95 backdrop-blur-xl shadow-lg shadow-zinc-200/40 max-h-[min(70vh,calc(100dvh-6rem))] overflow-y-auto sm:max-h-[min(70vh,calc(100dvh-6.5rem))]"
+              className="pointer-events-auto max-h-[min(70vh,calc(100dvh-3.5rem))] shrink-0 overflow-y-auto border-b border-slate-200 bg-white/95 shadow-lg backdrop-blur-xl"
             >
-              <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col gap-1">
+              <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 sm:px-6">
                 {navLinks.map((link) => (
                   <a
                     key={link.href}
                     href={link.href}
-                    className="py-3 px-2 rounded-lg text-base font-medium text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
+                    className="rounded-xl px-3 py-3 text-base font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-900"
                     onClick={() => setMenuOpen(false)}
                   >
                     {link.label}
@@ -151,7 +147,7 @@ export function Navbar({ initialLoggedIn = false }: NavbarProps) {
                 ))}
                 <Link
                   href={loggedIn ? "/dashboard" : "/login"}
-                  className="py-3 px-2 rounded-lg text-base font-medium text-zinc-600 hover:bg-zinc-50"
+                  className="rounded-xl px-3 py-3 text-base font-medium text-slate-600 hover:bg-slate-50"
                   onClick={() => setMenuOpen(false)}
                 >
                   {loggedIn ? "Dashboard" : "Log in"}
@@ -164,7 +160,7 @@ export function Navbar({ initialLoggedIn = false }: NavbarProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex-1 min-h-0 bg-black/20 backdrop-blur-sm pointer-events-auto"
+              className="min-h-0 flex-1 pointer-events-auto bg-slate-950/25 backdrop-blur-[2px]"
               onClick={() => setMenuOpen(false)}
             />
           </motion.div>
